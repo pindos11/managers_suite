@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% load i18n %}{% block content %}<h1>{% trans "Add shift assignment" %}</h1><p>{% trans "A conflict needs a manager explanation before it can be saved." %}</p><form method="post" class="card card-body">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">{% trans "Save shift" %}</button></form>{% endblock %}

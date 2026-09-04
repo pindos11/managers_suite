@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% load i18n %}{% block content %}<h1>{{ title }}</h1><p>{% blocktrans with item=object %}Are you sure you want to publish {{ item }}?{% endblocktrans %}</p><form method="post">{% csrf_token %}<button class="btn btn-danger">{% trans "Confirm" %}</button> <a href="{% url 'rosters' %}">{% trans "Cancel" %}</a></form>{% endblock %}

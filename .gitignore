@@ -1,0 +1,19 @@
+# Local configuration and secrets. Commit .env.example only.
+.env
+.env.*
+!.env.example
+
+# Python tooling and test output.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local application state and generated files.
+data/*.sqlite3
+data/*.sqlite3-*
+backups/
+staticfiles/
+*.log

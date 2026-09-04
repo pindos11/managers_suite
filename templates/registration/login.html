@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% load i18n %}{% block content %}<div class="col-md-5 mx-auto"><h1>{% trans "Manager sign in" %}</h1><form method="post" class="card card-body">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">{% trans "Sign in" %}</button></form></div>{% endblock %}
