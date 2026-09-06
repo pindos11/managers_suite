@@ -10,11 +10,13 @@ from django.utils import timezone
 
 DETAIL_HEADERS = ("Employee", "Role", "Date", "Day", "Time", "Location")
 DETAIL_FIELDS = ("employee", "role", "date", "day", "time", "location")
+EXCEL_DETAIL_HEADERS = ("Employee", "Date", "Day", "Time", "Location")
+EXCEL_DETAIL_FIELDS = ("employee", "date", "day", "time", "location")
 
 
 def export_rows(roster):
     assignments = roster.assignments.select_related("employee", "location").order_by("employee__name", "starts_at", "location__name")
-    return [{"employee": item.employee.name, "role": item.employee.role, "date": timezone.localtime(item.starts_at).date(), "day": timezone.localtime(item.starts_at).strftime("%A"), "time": "%s-%s" % (timezone.localtime(item.starts_at).strftime("%H:%M"), timezone.localtime(item.ends_at).strftime("%H:%M")), "location": item.location.name, "hours": (item.ends_at - item.starts_at).total_seconds() / 3600} for item in assignments]
+    return [{"employee_id": item.employee_id, "employee": item.employee.name, "role": item.employee.role, "date": timezone.localtime(item.starts_at).date(), "day": timezone.localtime(item.starts_at).strftime("%A"), "time": "%s-%s" % (timezone.localtime(item.starts_at).strftime("%H:%M"), timezone.localtime(item.ends_at).strftime("%H:%M")), "location": item.location.name, "hours": (item.ends_at - item.starts_at).total_seconds() / 3600} for item in assignments]
 
 
 def rows_by_employee(rows):
@@ -40,10 +42,10 @@ def _workbook_sheet(workbook, title, selected_rows, roster):
     from openpyxl.styles import Font
     sheet = workbook.create_sheet(title)
     sheet.append([f"{roster.month:%B %Y} roster"])
-    sheet.append(DETAIL_HEADERS)
+    sheet.append(EXCEL_DETAIL_HEADERS)
     for cell in sheet[2]: cell.font = Font(bold=True)
-    for row in selected_rows: sheet.append([row[field] if field != "date" else row[field].isoformat() for field in DETAIL_FIELDS])
-    for column, width in zip("ABCDEF", (26, 18, 14, 14, 16, 24)): sheet.column_dimensions[column].width = width
+    for row in selected_rows: sheet.append([row[field] if field != "date" else row[field].isoformat() for field in EXCEL_DETAIL_FIELDS])
+    for column, width in zip("ABCDE", (26, 14, 14, 16, 24)): sheet.column_dimensions[column].width = width
     sheet.freeze_panes = "A3"
 
 
@@ -63,28 +65,37 @@ def excel_export(roster, scope):
     else:
         sheet, days = workbook.create_sheet("Roster"), _month_days(roster)
         sheet.append([f"{roster.month:%B %Y} roster"])
-        sheet.append(["Employee", "Role", *[day.day for day in days]])
+        sheet.append(["Employee", *[day.day for day in days], "HOURS", "PLAN", "COEF."])
         for cell in sheet[2]:
             cell.font = Font(bold=True); cell.alignment = Alignment(horizontal="center")
-        scheduled = {(row["employee"], row["role"]) for row in rows}
-        employees = [(employee.name, employee.role) for employee in Employee.objects.filter(active=True).order_by("name")] 
+        scheduled = {(row["employee_id"], row["employee"]) for row in rows}
+        employees = [(employee.pk, employee.name) for employee in Employee.objects.filter(active=True).order_by("name")]
         employees.extend(sorted(scheduled - set(employees)))
         hours = defaultdict(float)
-        for row in rows: hours[(row["employee"], row["role"], row["date"])] += row["hours"]
-        for employee, role in employees:
-            sheet.append([employee, role, *[_hours_label(hours[employee, role, day]) if hours[employee, role, day] else "" for day in days]])
-        sheet.column_dimensions["A"].width, sheet.column_dimensions["B"].width = 26, 18
-        for column in range(3, len(days) + 3): sheet.column_dimensions[get_column_letter(column)].width = 7
-        for row in sheet.iter_rows(min_row=3, min_col=3):
+        for row in rows: hours[(row["employee_id"], row["date"])] += row["hours"]
+        for employee_id, employee in employees:
+            daily_hours = [hours[employee_id, day] for day in days]
+            sheet.append([employee, *[_hours_label(value) if value else "" for value in daily_hours], _hours_label(sum(daily_hours)), "", ""])
+        total_row = sheet.max_row + 1
+        daily_people = {day: len({row["employee_id"] for row in rows if row["date"] == day}) for day in days}
+        sheet.append(["Total people working", *[daily_people[day] for day in days], "", "", ""])
+        sheet.column_dimensions["A"].width = 26
+        for column in range(2, len(days) + 2): sheet.column_dimensions[get_column_letter(column)].width = 7
+        for column in range(len(days) + 2, len(days) + 5): sheet.column_dimensions[get_column_letter(column)].width = 12
+        for row in sheet.iter_rows(min_row=3, min_col=2):
             for cell in row: cell.alignment = Alignment(horizontal="center")
         weekend_fill = PatternFill("solid", fgColor="FFF2CC")
-        for day_index, day in enumerate(days, start=3):
-            if day.weekday() >= 5:
-                for row_index in range(2, sheet.max_row + 1):
-                    sheet.cell(row_index, day_index).fill = weekend_fill
-            else:
-                sheet.cell(2, day_index).fill = PatternFill("solid", fgColor="E9ECEF")
-        sheet.freeze_panes = "C3"
+        gray_fill = PatternFill("solid", fgColor="E9ECEF")
+        green_fill = PatternFill("solid", fgColor="E2F0D9")
+        red_fill = PatternFill("solid", fgColor="F4CCCC")
+        for day_index, day in enumerate(days, start=2):
+            sheet.cell(2, day_index).fill = weekend_fill if day.weekday() >= 5 else gray_fill
+        for row_index in range(2, total_row + 1): sheet.cell(row_index, 1).fill = green_fill
+        for row_index in range(3, total_row):
+            for day_index in range(2, len(days) + 2):
+                if sheet.cell(row_index, day_index).value: sheet.cell(row_index, day_index).fill = green_fill
+        for column in range(len(days) + 2, len(days) + 5): sheet.cell(2, column).fill = red_fill
+        sheet.freeze_panes = "B3"
     output = BytesIO(); workbook.save(output)
     return output.getvalue()
 

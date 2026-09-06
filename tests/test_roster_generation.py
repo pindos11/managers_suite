@@ -72,3 +72,35 @@ def test_manual_assignment_can_add_multiple_employees(client):
 
     assert response.status_code == 302
     assert set(roster.assignments.values_list("employee_id", flat=True)) == {first.pk, second.pk}
+
+@pytest.mark.django_db
+def test_legacy_roster_import_uses_filled_cells_as_assignments(client):
+    from django.contrib.auth.models import User
+    location = Location.objects.create(name="Main")
+    first = Employee.objects.create(name="First")
+    second = Employee.objects.create(name="Second")
+    for employee in [first, second]: EmployeeLocationEligibility.objects.create(employee=employee, location=location)
+    template = ShiftTemplate.objects.create(name="Day", location=location, start_time=time(9), end_time=time(17), min_headcount=1, max_headcount=2)
+    roster = RosterVersion.objects.create(month=date(2026, 2, 1))
+    client.force_login(User.objects.create_user("manager", password="test"))
+
+    response = client.post(f"/roster/{roster.pk}/import/", {"template": template.pk, "matrix": "Employee\t1\t2\nFirst\t8 h\t\nSecond\t\tWorked"})
+
+    assert response.status_code == 302
+    assert set(roster.assignments.values_list("employee_id", "starts_at__date")) == {(first.pk, date(2026, 2, 1)), (second.pk, date(2026, 2, 2))}
+
+@pytest.mark.django_db
+def test_legacy_roster_import_ignores_unknown_employee_rows(client):
+    from django.contrib.auth.models import User
+    location = Location.objects.create(name="Main")
+    employee = Employee.objects.create(name="Known")
+    EmployeeLocationEligibility.objects.create(employee=employee, location=location)
+    template = ShiftTemplate.objects.create(name="Day", location=location, start_time=time(9), end_time=time(17), min_headcount=1, max_headcount=1)
+    roster = RosterVersion.objects.create(month=date(2026, 2, 1))
+    client.force_login(User.objects.create_user("manager", password="test"))
+
+    response = client.post(f"/roster/{roster.pk}/import/", {"template": template.pk, "matrix": "Employee\t1\nUnknown\tWorked\nKnown\t8 h"}, follow=True)
+
+    assert response.status_code == 200
+    assert list(roster.assignments.values_list("employee_id", flat=True)) == [employee.pk]
+    assert b"Ignored 1 row" in response.content

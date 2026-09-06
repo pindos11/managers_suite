@@ -125,3 +125,11 @@ class MonthlyShiftTargetForm(forms.Form):
                 required=False,
                 initial=targets.get(employee.pk),
             )
+
+class LegacyRosterImportForm(forms.Form):
+    template = forms.ModelChoiceField(queryset=ShiftTemplate.objects.select_related("location").all(), label=_("Shift template"))
+    matrix = forms.CharField(
+        label=_("Pasted roster"),
+        widget=forms.Textarea(attrs={"rows": 14, "spellcheck": "false"}),
+        help_text=_("Paste a range copied from Excel. The first row must contain day numbers; the first column must contain employee names. Any non-empty day cell creates an assignment."),
+    )

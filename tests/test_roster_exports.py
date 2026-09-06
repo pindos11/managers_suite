@@ -30,8 +30,12 @@ def test_export_downloads_excel_and_pdf():
     pdf = client.get(f"/roster/{roster.pk}/export/?format=pdf&scope=total")
     assert excel["Content-Type"].startswith("application/vnd.openxmlformats") and excel.content.startswith(b"PK")
     sheet = load_workbook(BytesIO(excel.content)).active
-    assert [sheet.cell(2, column).value for column in range(1, 4)] == ["Employee", "Role", 1]
+    assert [sheet.cell(2, column).value for column in range(1, 4)] == ["Employee", 1, 2]
     assert sheet.cell(3, 1).value == "Jane Manager"
-    assert sheet.cell(3, 4).value == "8 h"
-    assert sheet.cell(2, 3).fill.fgColor.rgb == "00FFF2CC"
+    assert sheet.cell(3, 3).value == "8 h"
+    assert sheet.cell(3, 30).value == "8 h"
+    assert [sheet.cell(2, column).value for column in range(30, 33)] == ["HOURS", "PLAN", "COEF."]
+    assert sheet.cell(2, 2).fill.fgColor.rgb == "00FFF2CC"
+    assert sheet.cell(3, 3).fill.fgColor.rgb == "00E2F0D9"
+    assert sheet.cell(4, 3).value == 1
     assert pdf["Content-Type"] == "application/pdf" and pdf.content.startswith(b"%PDF")

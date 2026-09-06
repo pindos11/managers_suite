@@ -1,10 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from datetime import timedelta
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from .forms import AbsenceForm, AvailabilityForm, GenerationRequestForm, MonthlyShiftTargetForm, RosterCreateForm, RosterWishForm, ShiftAssignmentForm, ShiftTemplateForm
+from apps.people.models import Employee
+from .forms import AbsenceForm, AvailabilityForm, GenerationRequestForm, LegacyRosterImportForm, MonthlyShiftTargetForm, RosterCreateForm, RosterWishForm, ShiftAssignmentForm, ShiftTemplateForm
 from .models import Absence, Availability, RosterEmployeeTarget, RosterGenerationRun, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
 from .services import RosterOptimizationService, absence_replacements, coverage_for_roster, eligible_for_shift, generate_roster, proposal_delta, proposal_workload_delta, roster_calendar, shift_datetimes
 from .exports import excel_export, pdf_export
@@ -41,6 +45,86 @@ def roster_targets(request, pk):
         roster.employee_targets.exclude(employee_id__in=target_ids).delete()
         messages.success(request, _("Monthly shift targets saved."))
     return redirect("roster_detail", pk=roster.pk)
+
+def _legacy_import_assignments(roster, template, matrix):
+    import csv
+    from io import StringIO
+
+    rows = [row for row in csv.reader(StringIO(matrix), delimiter="\t") if any(cell.strip() for cell in row)]
+    if len(rows) < 2:
+        raise ValidationError(_("Paste a header row and at least one employee row."))
+    days = {}
+    for column, value in enumerate(rows[0][1:], start=1):
+        value = value.strip()
+        if not value:
+            continue
+        try:
+            day = int(value)
+        except ValueError:
+            raise ValidationError(_("Column %(column)s has '%(value)s'. Day headers must be numbers within this roster month.") % {"column": column + 1, "value": value})
+        month_end = (roster.month.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+        if not 1 <= day <= month_end.day:
+            raise ValidationError(_("Day %(day)s is outside this roster month.") % {"day": day})
+        if day in days.values():
+            raise ValidationError(_("Day %(day)s appears more than once in the pasted header.") % {"day": day})
+        days[column] = day
+    if not days:
+        raise ValidationError(_("Add day numbers to the first pasted row."))
+    employees = {}
+    for employee in Employee.objects.filter(active=True):
+        employees.setdefault(employee.name.strip().casefold(), []).append(employee)
+    assignments, skipped_names, seen, capacity = [], [], set(), {}
+    for row_number, row in enumerate(rows[1:], start=2):
+        name = row[0].strip() if row else ""
+        if not name:
+            continue
+        matches = employees.get(name.casefold(), [])
+        if not matches:
+            skipped_names.append(name)
+            continue
+        if len(matches) != 1:
+            raise ValidationError(_("Employee '%(name)s' is ambiguous. Use unique employee names before importing.") % {"name": name})
+        employee = matches[0]
+        for column, day in days.items():
+            if column >= len(row) or not row[column].strip():
+                continue
+            starts_at, ends_at = shift_datetimes(roster.month.replace(day=day), template)
+            key = (employee.pk, starts_at, ends_at)
+            if key in seen:
+                raise ValidationError(_("%(name)s is marked more than once for day %(day)s.") % {"name": name, "day": day})
+            seen.add(key)
+            if ShiftAssignment.objects.filter(roster_version=roster, employee=employee, starts_at=starts_at, ends_at=ends_at).exists():
+                raise ValidationError(_("%(name)s already has this shift on day %(day)s.") % {"name": name, "day": day})
+            valid, reason = eligible_for_shift(employee, template.location, starts_at, ends_at, roster)
+            if not valid:
+                raise ValidationError(_("%(name)s cannot be assigned on day %(day)s: %(reason)s.") % {"name": name, "day": day, "reason": reason})
+            capacity[(starts_at, ends_at)] = capacity.get((starts_at, ends_at), 0) + 1
+            assignments.append(ShiftAssignment(roster_version=roster, employee=employee, location=template.location, starts_at=starts_at, ends_at=ends_at, source="manual", override_reason=_("Imported from legacy roster.")))
+    if not assignments:
+        raise ValidationError(_("The pasted roster has no filled day cells to import."))
+    for (starts_at, ends_at), count in capacity.items():
+        existing = ShiftAssignment.objects.filter(roster_version=roster, location=template.location, starts_at=starts_at, ends_at=ends_at).count()
+        if existing + count > template.max_headcount:
+            raise ValidationError(_("The imported employees exceed the maximum staff for %(date)s.") % {"date": timezone.localtime(starts_at).date()})
+    return assignments, skipped_names
+
+@login_required
+def roster_import(request, pk):
+    roster = get_object_or_404(RosterVersion, pk=pk, status=RosterVersion.DRAFT)
+    form = LegacyRosterImportForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        try:
+            assignments, skipped_names = _legacy_import_assignments(roster, form.cleaned_data["template"], form.cleaned_data["matrix"])
+        except ValidationError as error:
+            form.add_error("matrix", error)
+        else:
+            with transaction.atomic():
+                ShiftAssignment.objects.bulk_create(assignments)
+            messages.success(request, _("Imported %(count)s legacy roster assignment(s).") % {"count": len(assignments)})
+            if skipped_names:
+                messages.warning(request, _("Ignored %(count)s row(s) for employees not in the current roster: %(names)s.") % {"count": len(skipped_names), "names": ", ".join(skipped_names)})
+            return redirect("roster_detail", pk=roster.pk)
+    return render(request, "roster/import.html", {"roster": roster, "form": form})
 
 @login_required
 def roster_delete(request, pk):

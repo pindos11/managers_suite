@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center"><div><h1>{% trans "Import legacy roster" %}</h1><p class="text-muted">{{ roster.month|date:"F Y" }}</p></div><a class="btn btn-outline-secondary" href="{% url 'roster_detail' roster.pk %}">{% trans "Cancel" %}</a></div>
+<div class="alert alert-info">{% trans "Copy the Employee column and day columns from Excel, including the header row, then paste here. Only whether each day cell is filled matters; its displayed hours are ignored." %}</div>
+<form method="post" class="card card-body">{% csrf_token %}{% for field in form %}<div class="mb-3">{{ field.label_tag }} {{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}{{ field.errors }}</div>{% endfor %}<button class="btn btn-primary align-self-start">{% trans "Import roster" %}</button></form>
+{% endblock %}
