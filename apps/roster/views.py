@@ -27,6 +27,15 @@ def roster_detail(request, pk):
     return render(request, "roster/detail.html", {"roster": roster, "calendar_weeks": roster_calendar(roster), "generation_form": GenerationRequestForm(roster)})
 
 @login_required
+def roster_delete(request, pk):
+    roster = get_object_or_404(RosterVersion, pk=pk)
+    if request.method == "POST":
+        roster.delete()
+        messages.success(request, _("Roster deleted."))
+        return redirect("rosters")
+    return render(request, "roster/delete.html", {"roster": roster})
+
+@login_required
 def roster_export(request, pk):
     roster = get_object_or_404(RosterVersion, pk=pk, status__in=[RosterVersion.DRAFT, RosterVersion.PUBLISHED])
     export_format = request.GET.get("format")
