@@ -39,19 +39,22 @@ def _hours_label(hours):
 
 
 def _workbook_sheet(workbook, title, selected_rows, roster):
-    from openpyxl.styles import Font
+    from openpyxl.styles import Border, Font, Side
     sheet = workbook.create_sheet(title)
     sheet.append([f"{roster.month:%B %Y} roster"])
     sheet.append(EXCEL_DETAIL_HEADERS)
     for cell in sheet[2]: cell.font = Font(bold=True)
     for row in selected_rows: sheet.append([row[field] if field != "date" else row[field].isoformat() for field in EXCEL_DETAIL_FIELDS])
     for column, width in zip("ABCDE", (26, 14, 14, 16, 24)): sheet.column_dimensions[column].width = width
+    border = Border(*(Side(style="thin", color="ADB5BD") for _ in range(4)))
+    for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=5):
+        for cell in row: cell.border = border
     sheet.freeze_panes = "A3"
 
 
 def excel_export(roster, scope):
     from openpyxl import Workbook
-    from openpyxl.styles import Alignment, Font, PatternFill
+    from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
     from openpyxl.utils import get_column_letter
     from apps.people.models import Employee
     rows = export_rows(roster)
@@ -95,6 +98,9 @@ def excel_export(roster, scope):
             for day_index in range(2, len(days) + 2):
                 if sheet.cell(row_index, day_index).value: sheet.cell(row_index, day_index).fill = green_fill
         for column in range(len(days) + 2, len(days) + 5): sheet.cell(2, column).fill = red_fill
+        border = Border(*(Side(style="thin", color="ADB5BD") for _ in range(4)))
+        for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column):
+            for cell in row: cell.border = border
         sheet.freeze_panes = "B3"
     output = BytesIO(); workbook.save(output)
     return output.getvalue()

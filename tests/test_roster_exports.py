@@ -38,4 +38,5 @@ def test_export_downloads_excel_and_pdf():
     assert sheet.cell(2, 2).fill.fgColor.rgb == "00FFF2CC"
     assert sheet.cell(3, 3).fill.fgColor.rgb == "00E2F0D9"
     assert sheet.cell(4, 3).value == 1
+    assert sheet.cell(3, 3).border.left.style == "thin"
     assert pdf["Content-Type"] == "application/pdf" and pdf.content.startswith(b"%PDF")

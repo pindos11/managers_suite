@@ -402,7 +402,11 @@ class RosterOptimizationService:
         if target_fulfillment:
             target_value = optimize(sum(target_fulfillment))
             model.Add(sum(target_fulfillment) == target_value)
-        assignments_value = optimize(total_assignments)
+        # With targets configured, do not keep filling optional capacity after
+        # coverage and targets are met. This keeps MAX as a ceiling, not a
+        # staffing goal. Rosters without targets retain the prior behavior of
+        # filling all feasible capacity.
+        assignments_value = optimize(total_assignments, maximize=not bool(target_fulfillment))
         model.Add(total_assignments == assignments_value)
         retained_value = 0
         if self.planning_starts_on > self.roster.month:

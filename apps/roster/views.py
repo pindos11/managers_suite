@@ -28,7 +28,7 @@ def roster_create(request):
 @login_required
 def roster_detail(request, pk):
     roster = get_object_or_404(RosterVersion, pk=pk)
-    return render(request, "roster/detail.html", {"roster": roster, "calendar_weeks": roster_calendar(roster), "generation_form": GenerationRequestForm(roster), "target_form": MonthlyShiftTargetForm(roster)})
+    return render(request, "roster/detail.html", {"roster": roster, "calendar_weeks": roster_calendar(roster), "generation_form": GenerationRequestForm(roster), "target_form": MonthlyShiftTargetForm(roster), "saved_targets": roster.employee_targets.select_related("employee").order_by("employee__name")})
 
 @login_required
 def roster_targets(request, pk):

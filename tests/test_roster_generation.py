@@ -104,3 +104,18 @@ def test_legacy_roster_import_ignores_unknown_employee_rows(client):
     assert response.status_code == 200
     assert list(roster.assignments.values_list("employee_id", flat=True)) == [employee.pk]
     assert b"Ignored 1 row" in response.content
+
+@pytest.mark.django_db
+def test_monthly_shift_targets_are_saved_and_reloaded(client):
+    from django.contrib.auth.models import User
+    from apps.roster.models import RosterEmployeeTarget
+    employee = Employee.objects.create(name="Targeted")
+    roster = RosterVersion.objects.create(month=date(2026, 2, 1))
+    client.force_login(User.objects.create_user("manager", password="test"))
+
+    response = client.post(f"/roster/{roster.pk}/targets/", {f"employee_{employee.pk}": "12"}, follow=True)
+
+    assert response.status_code == 200
+    assert RosterEmployeeTarget.objects.get(roster_version=roster, employee=employee).target_shifts == 12
+    assert f'value="12"'.encode() in response.content
+    assert b"Targeted: 12" in response.content
