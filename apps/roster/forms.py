@@ -23,11 +23,15 @@ class ISODateInput(forms.DateInput):
         super().__init__(attrs=attrs, format="%Y-%m-%d")
 
 class RosterCreateForm(forms.ModelForm):
+    # A native month input submits YYYY-MM rather than a full ISO date.
+    # Declare the field explicitly because ModelForm Meta does not apply
+    # input_formats to its generated DateField.
+    month = forms.DateField(input_formats=["%Y-%m", "%Y-%m-%d"], widget=MonthInput())
+
     class Meta:
         model = RosterVersion
         fields = ["month"]
-        widgets = {"month": MonthInput()}
-        input_formats = ["%Y-%m", "%Y-%m-%d"]
+
     def clean_month(self):
         month = self.cleaned_data["month"]
         return month.replace(day=1)

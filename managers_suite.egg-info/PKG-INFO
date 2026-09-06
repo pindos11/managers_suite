@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: managers-suite
+Version: 0.1.0
+Summary: Manager dashboard, roster, performance reporting and alerts
+Requires-Python: >=3.11
+Requires-Dist: Django<5.2,>=5.0
+Requires-Dist: openpyxl<4,>=3.1
+Requires-Dist: ortools<10,>=9.10
+Requires-Dist: reportlab<5,>=4.2
+Requires-Dist: waitress<4,>=3
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: pytest-django>=4; extra == "dev"

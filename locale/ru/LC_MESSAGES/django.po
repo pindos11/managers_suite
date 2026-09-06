@@ -1,491 +1,825 @@
+# Russian translations for Manager?s Suite.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the Manager?s Suite project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: Manager?s Suite VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-09-07 01:47+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
 
-msgid "Manager's Suite"
-msgstr "Менеджерский кабинет"
+#, python-format
+msgid "%(name)s already has this shift on day %(day)s."
+msgstr "%(name)s уже имеет такую же смену в день %(day)s."
 
-msgid "Language"
-msgstr "Язык"
+#, python-format
+msgid "%(name)s cannot be assigned on day %(day)s: %(reason)s."
+msgstr "Сотрудник %(name)s не может быть назначен в день %(day)s: %(reason)s."
 
-msgid "Employees"
-msgstr "Сотрудники"
+#, python-format
+msgid "%(name)s is marked more than once for day %(day)s."
+msgstr "%(name)s отмечен более одного раза за %(day)s день."
 
-msgid "Locations"
-msgstr "Локации"
+msgid "1 (low) to 5 (high)"
+msgstr "от 1 (низкий) до 5 (высокий)"
 
-msgid "Roster"
-msgstr "Расписание"
+msgid "A conflict needs a manager explanation before it can be saved."
+msgstr "Конфликт требует объяснения менеджера, прежде чем его можно будет сохранить."
 
-msgid "Availability"
-msgstr "Доступность"
+msgid "A stronger wish to keep this date range free. Use an approved absence when work must not be scheduled."
+msgstr "Более сильное пожелание сохранить этот диапазон дат свободным. Используйте утвержденное отсутствие, когда работа точно не должна быть запланирована."
 
-msgid "Wishes"
-msgstr "Предпочтения"
+msgid "Absence"
+msgstr "Отсутствие"
+
+msgid "Absence saved."
+msgstr "Отсутствие сохранено."
 
 msgid "Absences"
 msgstr "Отсутствия"
 
-msgid "Reports"
-msgstr "Отчёты"
+msgid "Accepted"
+msgstr "Принято"
 
-msgid "Alerts"
-msgstr "Оповещения"
+msgid "Acknowledge"
+msgstr "Подтверждение"
 
-msgid "Save"
-msgstr "Сохранить"
-
-msgid "Cancel"
-msgstr "Отмена"
-
-msgid "Confirm"
-msgstr "Подтвердить"
-
-msgid "Edit"
-msgstr "Изменить"
-
-msgid "Remove"
-msgstr "Удалить"
-
-msgid "Name"
-msgstr "Название"
+msgid "Acknowledged"
+msgstr "Принято"
 
 msgid "Active"
 msgstr "Активен"
 
-msgid "Notes"
-msgstr "Примечания"
+msgid "Add availability"
+msgstr "Добавить доступность"
 
-msgid "Employee"
-msgstr "Сотрудник"
+msgid "Add custom shift"
+msgstr "Доавить смену"
 
-msgid "Location"
-msgstr "Локация"
+msgid "Add day numbers to the first pasted row."
+msgstr "Добавьте номера дней в первую вставленную строку."
 
-msgid "Status"
-msgstr "Статус"
+msgid "Add employee"
+msgstr "Добавить сотрудника"
 
-msgid "Period"
-msgstr "Период"
+msgid "Add employees"
+msgstr "Добавить сотрудников"
+
+msgid "Add location"
+msgstr "Добавить локацию"
+
+msgid "Add shift assignments"
+msgstr "Добавить назначения смены"
+
+msgid "Add shift template"
+msgstr "Добавить шаблон смены"
+
+msgid "Add wish"
+msgstr "Добавить пожелание"
+
+msgid "After"
+msgstr "После"
+
+msgid "Alerts"
+msgstr "Предупреждения"
+
+#, python-format
+msgid "Allocations total %(total)s; location target is %(target)s."
+msgstr "Всего назначено: %(total)s; цель локации: %(target)s."
+
+msgid "Allowed locations"
+msgstr "Допустимые локации"
+
+msgid "Applied"
+msgstr "Применено"
+
+msgid "Apply proposal"
+msgstr "Использовать предложение"
+
+msgid "Approved"
+msgstr "Принято"
+
+#, python-format
+msgid "Are you sure you want to publish %(item)s?"
+msgstr "Вы уверены, что хотите опубликовать %(item)s?"
+
+msgid "Assigned / minimum"
+msgstr "Назначено / минимум"
+
+msgid "Assignments"
+msgstr "Назначения"
+
+msgid "Assignments before this date stay fixed; the solver changes this date through month-end."
+msgstr "Назначения до этой даты остаются фиксированными; генератор меняет с этой даты до конца месяца."
+
+msgid "Availability"
+msgstr "Наличие"
+
+msgid "Availability record removed."
+msgstr "Запись о доступности удалена."
+
+msgid "Availability record saved."
+msgstr "Запись о доступности сохранена."
+
+msgid "Available"
+msgstr "Доступен"
+
+msgid "Back to absences"
+msgstr "Назад к отсутствиям"
+
+msgid "Back to roster"
+msgstr "Вернуться к расписанию"
+
+msgid "Before"
+msgstr "До"
+
+msgid "Below pace"
+msgstr "Ниже темпа"
+
+msgid "Break minutes"
+msgstr "Перерыв минут"
+
+msgid "By employee — one PDF page or Excel sheet per employee"
+msgstr "По сотрудникам — одна страница PDF или один лист Excel на сотрудника"
+
+msgid "Cancel"
+msgstr "Отмена"
 
 msgid "Category"
 msgstr "Категория"
 
+msgid "Choose a date within this roster month."
+msgstr "Выберите дату в этом месяце который покрывает это расписание."
+
+msgid "Choose a file format and how the roster should be arranged."
+msgstr "Выберите формат файла и то, как должно быть организовано расписание."
+
+msgid "Choose a valid start date for the planning window."
+msgstr "Выберите допустимую дату начала окна планирования."
+
+msgid "Choose recurring weekdays the employee prefers to work. Other weekdays in this period are avoided where possible."
+msgstr "Выберите повторяющиеся дни недели, в которые сотрудник предпочитает работать. Остальные дни будут (по возможности) избегаться генератором."
+
+#, python-format
+msgid "Column %(column)s has '%(value)s'. Day headers must be numbers within this roster month."
+msgstr "Столбец %(column)s содержит '%(value)s'. Заголовки дней должны быть номерами дней планируемого месяца."
+
+msgid "Confirm"
+msgstr "Подтвердить"
+
+msgid "Confirm uncovered shifts before publishing."
+msgstr "Подтвердите непокрытые смены перед публикацией."
+
+#, python-format
+msgid "Conflict for %(employees)s. Explain this override."
+msgstr "Конфликт для %(employees)s. Объясните это переопределение."
+
+msgid "Copy the Employee column and day columns from Excel, including the header row, then paste here. Only whether each day cell is filled matters; its displayed hours are ignored."
+msgstr "Скопируйте столбец Сотрудник и столбцы дня из Excel, включая строку заголовка, а затем вставьте сюда. Имеет значение только то, заполнена ли каждая дневная ячейка; ее отображаемые часы игнорируются."
+
+msgid "Create monthly roster"
+msgstr "Создать расписание на месяц"
+
+msgid "Critical"
+msgstr "Критическое"
+
+msgid "Custom shift"
+msgstr "Смена"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Date preference"
+msgstr "Предпочтения по дате"
+
+#, python-format
+msgid "Day %(day)s appears more than once in the pasted header."
+msgstr "День %(day)s появляется в вставленном заголовке более одного раза."
+
+#, python-format
+msgid "Day %(day)s is outside this roster month."
+msgstr "День %(day)s находится за пределами этого месяца."
+
+msgid "Day off"
+msgstr "Выходной день"
+
+msgid "Delete roster"
+msgstr "Удалить расписание"
+
+#, python-format
+msgid "Delete the %(month)s roster and all of its assignments? This cannot be undone."
+msgstr "Удалить разсписание за %(month)s и все его распределения? Это действие нельзя отменить."
+
+msgid "Dismissed"
+msgstr "Отклонено"
+
+msgid "Download export"
+msgstr "Скачать экспорт"
+
+msgid "Draft"
+msgstr "Черновик"
+
+msgid "Draft roster created. Add shift templates, then generate assignments."
+msgstr "Черновик расписания создан. Добавьте шаблоны смен, а затем создайте распределение."
+
+msgid "Each shift shows its proposed assigned employees and the staffing change from the current draft."
+msgstr "В каждой смене отображаются предлагаемые назначенные сотрудники и кадровые изменения для каждого сотрудника по сравнению с текущим проектом."
+
+msgid "Edit"
+msgstr "Правка"
+
+msgid "Eligible candidates"
+msgstr "Подходящие кандидаты"
+
+msgid "Eligible unassigned employees:"
+msgstr "Подходящие неназначенные сотрудники:"
+
+msgid "Employee"
+msgstr "Сортудник"
+
+#, python-format
+msgid "Employee '%(name)s' is ambiguous. Use unique employee names before importing."
+msgstr "Сотрудник '%(name)s' встречается больше одного раза. Используйте уникальные имена сотрудников перед импортом."
+
+msgid "Employee total"
+msgstr "Всего сотрудников"
+
+msgid "Employees"
+msgstr "Сотрудники"
+
+msgid "End time"
+msgstr "Время окончания"
+
+msgid "Excel workbook (.xlsx)"
+msgstr "Книга Excel (.xlsx)"
+
+msgid "Explanation"
+msgstr "Пояснение"
+
+msgid "Export"
+msgstr "Экспорт"
+
+msgid "Export roster"
+msgstr "Экспортировать расписание"
+
+msgid "File format"
+msgstr "Формат файла"
+
+msgid "First date the solver may change."
+msgstr "Дата, с которой генератор будет вносить изменения."
+
+msgid "First day of the month"
+msgstr "Первый день месяца"
+
+msgid "First day this wish applies. For one exact date, use the same date in both fields."
+msgstr "В первый день действует это пожелание. Для одной точной даты используйте одну и ту же дату в обоих полях."
+
+msgid "Fri"
+msgstr "Пт"
+
+msgid "Friday"
+msgstr "Пятница"
+
+msgid "Generate preview"
+msgstr "Создание предварительного просмотра"
+
+msgid "Hold Ctrl (or Command) to select more than one employee."
+msgstr "Удерживайте Ctrl (или Command), чтобы выбрать более одного сотрудника."
+
+msgid "I accept these uncovered shifts."
+msgstr "Я принимаю эти непокрытые смены."
+
+#, python-format
+msgid "Ignored %(count)s row(s) for employees not in the current roster: %(names)s."
+msgstr "Пропущено %(count)s строк для сотрудников, которых нет в текущем списке: %(names)s."
+
+msgid "Import legacy roster"
+msgstr "Импорт устаревшего списка"
+
+msgid "Import roster"
+msgstr "Импортировать расписание"
+
+#, python-format
+msgid "Imported %(count)s legacy roster assignment(s)."
+msgstr "Импортировано %(count)s старых назначений в расписание."
+
+msgid "Imported from legacy roster."
+msgstr "Импортировано из старого списка. (excel)"
+
+msgid "Info"
+msgstr "Информация"
+
+msgid "Invalid"
+msgstr "Невалидно"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Last day this wish applies. Set equal to the first date for an exact-date wish."
+msgstr "Последний день, на который влияет пожелание. Установите равным первому дню для пожелания на один день."
+
+msgid "Latest accepted reports"
+msgstr "Последние принятые отчеты"
+
+msgid "Location"
+msgstr "Локация"
+
+msgid "Location total"
+msgstr "Всего по локации"
+
+msgid "Locations"
+msgstr "Локации"
+
+msgid "Manager note"
+msgstr "Примечание менеджера"
+
+msgid "Manager sign in"
+msgstr "Вход для менеджера"
+
+msgid "Manager's Suite"
+msgstr "Manager's Suite"
+
+msgid "Maximum employees permitted on this shift."
+msgstr "Максимальное количество сотрудников, разрешенное в эту смену."
+
+msgid "Maximum headcount must be equal to or greater than the minimum."
+msgstr "Максимальная численность персонала должна быть равна или больше минимальной."
+
+msgid "Maximum staff"
+msgstr "Максимальное количество сотрудников"
+
+msgid "Minimum coverage gaps"
+msgstr "МИНИМАЛЬНОЕ ПОКРЫТИЕ:"
+
+msgid "Minimum coverage required for this shift."
+msgstr "Минимальное покрытие, необходимое для этой смены."
+
+msgid "Minimum staff"
+msgstr "Минимум персонала"
+
+msgid "Missing report"
+msgstr "Недостающие отчёты"
+
+msgid "Mon"
+msgstr "Пн"
+
+msgid "Monday"
+msgstr "Понедельник"
+
+msgid "Month"
+msgstr "Месяц"
+
+msgid "Monthly shift targets"
+msgstr "Месячная цель по сменам"
+
+msgid "Monthly shift targets saved."
+msgstr "Месячная цель по сменам сохранена."
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Needs review"
+msgstr "Требует проверки"
+
+msgid "No absences recorded."
+msgstr "Отсутствий введено."
+
+msgid "No active, eligible employee is available."
+msgstr "Нет доступных активных сотрудников."
+
+msgid "No alerts."
+msgstr "Оповещений нет."
+
+msgid "No availability records."
+msgstr "Нет записей о доступности."
+
+msgid "No date preference"
+msgstr "Нет предпочтений по дате"
+
+msgid "No direct replacement is currently eligible."
+msgstr "Нет подходящих сотрудников на замену."
+
+msgid "No employee workload changes."
+msgstr "Загрузка сотрудников не изменяется."
+
+msgid "No employees yet."
+msgstr "Сотрудников пока нет."
+
+msgid "No increase"
+msgstr "Без увеличения"
+
+msgid "No locations yet."
+msgstr "Локаций пока нет."
+
+msgid "No open alerts."
+msgstr "Нет открытых оповещений."
+
+msgid "No report received within the configured interval."
+msgstr "Отчет не получен в течение заданного интервала."
+
+msgid "No reports yet."
+msgstr "Пока никаких сообщений."
+
+#, python-format
+msgid "No roster assignments have changed yet. The solver may change shifts from %(start)s through month-end; earlier shifts remain fixed."
+msgstr "Назначения в расписании еще не изменены. Генератор может изменять смены с %(start)s до конца месяца; более ранние смены остаются фиксированными."
+
+msgid "No rosters yet. Create a draft to start planning."
+msgstr "Пока нет расписаний. Создайте черновик, чтобы начать планирование."
+
+msgid "No shifts"
+msgstr "Без смен"
+
+msgid "No staff scheduled right now."
+msgstr "Сейчас нет запланированных сотрудников."
+
+msgid "No templates yet."
+msgstr "Нет шаблонов."
+
+msgid "No wishes recorded."
+msgstr "Желания не записаны."
+
+msgid "Not enough eligible employees after absences, unavailability, overlaps, and locked assignments."
+msgstr "Недостаточно подходящих сотрудников после отсутствия, недоступности, дублирования и заблокированных назначений."
+
+msgid "Notes"
+msgstr "Примечания"
+
+msgid "One or more selected employees are already assigned to this shift. Remove the existing assignment instead of adding a duplicate."
+msgstr "Один или несколько выбранных сотрудников уже назначены на эту смену. Удалите существующее назначение вместо добавления дубликата."
+
+#, python-format
+msgid "Only %(count)s more employee(s) can be added to this shift."
+msgstr "На эту смену можно добавить ещё только %(count)s сотрудника(ов)."
+
+msgid "Only draft rosters can be generated."
+msgstr "Могут быть сгенерированы только черновые расписания."
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "Open alerts"
+msgstr "Открыть оповещения"
+
+msgid "Operating hours"
+msgstr "Время работы"
+
+msgid "Optional manager context; it does not change the automatic score."
+msgstr "Необязательный контекст менеджера; он не изменяет автоматическую оценку при генерации."
+
+msgid "Optional. A target is prioritized after minimum staffing but before filling optional shift capacity."
+msgstr "Необязательно. Цель имеет приоритет после минимального укомплектования персоналом, но до заполнения максимального количества сотрудников."
+
+msgid "Optional. Gives this location extra weight when the draft is generated."
+msgstr "Необязательно. Придает этой локации дополнительный вес при создании черновика расписания."
+
+msgid "PDF document (.pdf)"
+msgstr "PDF-документ (.pdf)"
+
+msgid "Paste a header row and at least one employee row."
+msgstr "Вставьте строку заголовка и хотя бы одну строку сотрудника."
+
+msgid "Paste a range copied from Excel. The first row must contain day numbers; the first column must contain employee names. Any non-empty day cell creates an assignment."
+msgstr "Вставьте диапазон, скопированный из Excel. Первая строка должна содержать номера дней; первый столбец должен содержать имена сотрудников. Любая ячейка непустого дня создает назначение."
+
+msgid "Pasted roster"
+msgstr "Вставленный список"
+
+msgid "Pending"
+msgstr "В процессе"
+
+msgid "Period"
+msgstr "Период"
+
+msgid "Planning starts on"
+msgstr "Планирование начинается с"
+
+msgid "Preferred weekdays"
+msgstr "Предпочтительные дни недели"
+
+msgid "Preview"
+msgstr "Предпросмотр"
+
+msgid "Priority"
+msgstr "Приоритетность"
+
+msgid "Proposed month"
+msgstr "Предлагаемый месяц"
+
+msgid "Publish"
+msgstr "Опубликовать"
+
+msgid "Publish roster"
+msgstr "Опубликовать расписание"
+
+msgid "Published"
+msgstr "Опубликовано"
+
+msgid "Reason"
+msgstr "Причина"
+
+msgid "Record absence"
+msgstr "Запись об отсутствии"
+
+msgid "Remove"
+msgstr "Снимите"
+
+msgid "Remove availability record"
+msgstr "Удалить запись о свободных датах"
+
+msgid "Remove shift assignment"
+msgstr "Удалить назначение смены"
+
+#, python-format
+msgid "Remove the availability record for %(employee)s?"
+msgstr "Удалить запись о доступности для %(employee)s?"
+
+msgid "Replacement options"
+msgstr "Варианты замены"
+
+msgid "Reported"
+msgstr "заболевании/устойчивости"
+
+msgid "Reports"
+msgstr "надзоре»"
+
+msgid "Resolve"
+msgstr "Решить"
+
+msgid "Resolved"
+msgstr "Решено"
+
+msgid "Result"
+msgstr "Результат"
+
+msgid "Return roster to draft"
+msgstr "Вернуть список в черновик"
+
+#, python-format
+msgid "Return the %(month)s roster to draft? Its existing assignments will remain, and you can edit and publish it again."
+msgstr "Вернуть список %(month)s в драфт? Существующие назначения останутся, и вы сможете редактировать и публиковать их снова."
+
+msgid "Return to draft"
+msgstr "Вернуться к черновику"
+
+msgid "Role"
+msgstr "Роль"
+
+msgid "Roster"
+msgstr "Список"
+
+msgid "Roster deleted."
+msgstr "Список удален."
+
+msgid "Roster optimizer could not prove an optimal result within 20 seconds. Reduce the planning scope and retry."
+msgstr "Оптимизатор реестра не смог доказать оптимальный результат в течение 20 секунд. Уменьшите объем планирования и повторите попытку."
+
+msgid "Roster published."
+msgstr "Опубликован реестр."
+
+msgid "Roster returned to draft. Existing assignments were kept."
+msgstr "Состав вернулся к черновику. Существующие задания были сохранены."
+
+msgid "Roster solver preview"
+msgstr "Предварительный просмотр решателя реестра"
+
+msgid "Roster wish"
+msgstr "Желание реестра"
+
+msgid "Roster wish saved."
+msgstr "Желание реестра сохранено."
+
+msgid "Roster wishes"
+msgstr "Пожелания реестра"
+
+msgid "Rosters"
+msgstr "Реестры"
+
+msgid "Rule type"
+msgstr "Тип правила"
+
+msgid "Sat"
+msgstr "Сб"
+
+msgid "Saturday"
+msgstr "Суббота "
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Save shifts"
+msgstr "Сохранить смены"
+
+msgid "Save targets"
+msgstr "Сохранить цели"
+
+msgid "Saved targets:"
+msgstr "Сохраненные цели:"
+
+msgid "Scope"
+msgstr "Масштаб и сфера охвата"
+
+msgid "Search employees"
+msgstr "Поиск Сотрудников..."
+
+msgid "Severity"
+msgstr "Тяжесть"
+
+msgid "Shift"
+msgstr "Клавиша Shift"
+
+msgid "Shift assignment removed."
+msgstr "Назначение смены удалено."
+
+msgid "Shift assignments saved."
+msgstr "Назначения смен сохранены."
+
+msgid "Shift template"
+msgstr "Шаблон смены"
+
+msgid "Shift template saved."
+msgstr "Шаблон смены сохранен."
+
+msgid "Shift templates"
+msgstr "Шаблоны смен"
+
+msgid "Sign in"
+msgstr "Зарегистрироваться"
+
+msgid "Solver proposal applied. Manual assignments were kept."
+msgstr "Предложение решателя применено. Назначения вручную сохранены."
+
 msgid "Source"
-msgstr "Источник"
+msgstr "Источник:"
+
+msgid "Staff scheduled now"
+msgstr "Штат запланирован сейчас"
+
+msgid "Start time"
+msgstr "Время начала"
+
+msgid "Status"
+msgstr "Status/Статус"
+
+msgid "Sun"
+msgstr "Солнце"
+
+msgid "Sunday"
+msgstr "Воскресенье "
+
+msgid "Superseded"
+msgstr "Замененные документы"
+
+msgid "System"
+msgstr "Система"
+
+msgid "Target shifts"
+msgstr "Целевые сдвиги"
+
+msgid "Templates define the required shifts created for every day of a monthly roster."
+msgstr "Шаблоны определяют необходимые смены, создаваемые для каждого дня ежемесячного реестра."
+
+msgid "The cumulative result has not increased."
+msgstr "Совокупный результат не увеличился."
+
+msgid "The employee whose preference is being recorded."
+msgstr "Сотрудник, чье предпочтение записывается."
+
+#, python-format
+msgid "The imported employees exceed the maximum staff for %(date)s."
+msgstr "Импортированные сотрудники превышают максимальное количество сотрудников на %(date)s."
+
+msgid "The pasted roster has no filled day cells to import."
+msgstr "В вставленном списке нет заполненных ячеек дня для импорта."
+
+msgid "The roster inputs changed after this preview. Generate a new preview."
+msgstr "Входы списка изменились после этого предварительного просмотра. Создайте новый предварительный просмотр."
+
+msgid "The solver fills minimum coverage first, then monthly shift targets, then optional capacity, balances shifts, and finally optimizes wishes."
+msgstr "Решатель сначала заполняет минимальный охват, затем ежемесячные цели смены, затем опциональную емкость, балансирует сдвиги и, наконец, оптимизирует пожелания."
+
+msgid "This absence affects no planned shifts."
+msgstr "Это отсутствие не влияет на запланированные смены."
+
+msgid "This proposal has already been applied."
+msgstr "Это предложение уже было применено."
+
+msgid "This proposal is no longer available to apply."
+msgstr "Это предложение больше не доступно для применения."
+
+msgid "This roster still has uncovered shifts:"
+msgstr "В этом списке все еще есть смены:"
+
+msgid "Thu"
+msgstr "Чт"
+
+msgid "Thursday"
+msgstr "Четверг"
 
 msgid "Time"
 msgstr "Время"
 
 msgid "Today"
-msgstr "Сегодня"
+msgstr "За сегодня"
 
-msgid "System"
-msgstr "Система"
+msgid "Total roster — all employees in one report"
+msgstr "Итого по реестру — все сотрудники в одном отчете"
 
-msgid "Open"
-msgstr "Открыто"
+msgid "Tue"
+msgstr "Вт"
 
-msgid "Acknowledge"
-msgstr "Подтвердить получение"
-
-msgid "Resolve"
-msgstr "Закрыть"
-
-msgid "No alerts."
-msgstr "Нет оповещений."
-
-msgid "No open alerts."
-msgstr "Нет открытых оповещений."
-
-msgid "Open alerts"
-msgstr "Открытые оповещения"
-
-msgid "Staff scheduled now"
-msgstr "Сотрудники на смене сейчас"
-
-msgid "No staff scheduled right now."
-msgstr "Сейчас нет сотрудников на смене."
-
-msgid "Latest accepted reports"
-msgstr "Последние принятые отчёты"
-
-msgid "Result"
-msgstr "Результат"
-
-msgid "Reported"
-msgstr "Отправлено"
-
-msgid "No reports yet."
-msgstr "Отчётов пока нет."
-
-msgid "Employee total"
-msgstr "Итого сотрудника"
-
-msgid "Location total"
-msgstr "Итого локации"
-
-msgid "Manager sign in"
-msgstr "Вход менеджера"
-
-msgid "Sign in"
-msgstr "Войти"
-
-msgid "Add employee"
-msgstr "Добавить сотрудника"
-
-msgid "Search employees"
-msgstr "Поиск сотрудников"
-
-msgid "Priority"
-msgstr "Приоритет"
-
-msgid "archived"
-msgstr "в архиве"
-
-msgid "No employees yet."
-msgstr "Сотрудников пока нет."
-
-msgid "Add location"
-msgstr "Добавить локацию"
-
-msgid "Operating hours"
-msgstr "Часы работы"
-
-msgid "No locations yet."
-msgstr "Локаций пока нет."
-
-msgid "Rosters"
-msgstr "Расписания"
-
-msgid "Shift templates"
-msgstr "Шаблоны смен"
-
-msgid "Create monthly roster"
-msgstr "Создать месячное расписание"
-
-msgid "Month"
-msgstr "Месяц"
-
-msgid "Assignments"
-msgstr "Назначения"
-
-msgid "Open"
-msgstr "Открыть"
-
-msgid "No rosters yet. Create a draft to start planning."
-msgstr "Расписаний пока нет. Создайте черновик, чтобы начать планирование."
-
-msgid "Add shift template"
-msgstr "Добавить шаблон смены"
-
-msgid "Templates define the required shifts created for every day of a monthly roster."
-msgstr "Шаблоны определяют обязательные смены, создаваемые для каждого дня месячного расписания."
-
-msgid "Minimum staff"
-msgstr "Минимум сотрудников"
-
-msgid "Maximum staff"
-msgstr "Максимум сотрудников"
-
-msgid "No templates yet."
-msgstr "Шаблонов пока нет."
-
-msgid "Add custom shift"
-msgstr "Добавить произвольную смену"
-
-msgid "Publish"
-msgstr "Опубликовать"
-
-msgid "Return to draft"
-msgstr "Вернуть в черновик"
-
-msgid "Generate preview"
-msgstr "Создать предварительный просмотр"
-
-msgid "Custom shift"
-msgstr "Произвольная смена"
-
-msgid "assigned"
-msgstr "назначено"
-
-msgid "gap"
-msgstr "нехватка"
+msgid "Tuesday"
+msgstr "Вторник"
 
 msgid "Unassigned"
-msgstr "Не назначено"
-
-msgid "Add employee"
-msgstr "Добавить сотрудника"
-
-msgid "No shifts"
-msgstr "Нет смен"
-
-msgid "Publish roster"
-msgstr "Опубликовать расписание"
-
-msgid "This roster still has uncovered shifts:"
-msgstr "В этом расписании ещё есть непокрытые смены:"
-
-msgid "I accept these uncovered shifts."
-msgstr "Я принимаю эти непокрытые смены."
-
-msgid "Return roster to draft"
-msgstr "Вернуть расписание в черновик"
-
-msgid "Add shift assignment"
-msgstr "Добавить назначение на смену"
-
-msgid "A conflict needs a manager explanation before it can be saved."
-msgstr "Для сохранения конфликта требуется пояснение менеджера."
-
-msgid "Save shift"
-msgstr "Сохранить смену"
-
-msgid "Remove shift assignment"
-msgstr "Удалить назначение на смену"
-
-msgid "Add availability"
-msgstr "Добавить доступность"
-
-msgid "Available"
-msgstr "Доступен"
+msgstr "Неназначенные"
 
 msgid "Unavailable"
 msgstr "Недоступен"
 
-msgid "No availability records."
-msgstr "Нет записей о доступности."
+msgid "Unwanted"
+msgstr "Нежелательный"
 
-msgid "Remove availability record"
-msgstr "Удалить запись о доступности"
-
-msgid "Roster wishes"
-msgstr "Предпочтения расписания"
-
-msgid "Add wish"
-msgstr "Добавить предпочтение"
-
-msgid "Preferred weekdays"
-msgstr "Предпочтительные дни недели"
-
-msgid "Date preference"
-msgstr "Предпочтение даты"
-
-msgid "Day off"
-msgstr "Выходной"
-
-msgid "No wishes recorded."
-msgstr "Предпочтений пока нет."
-
-msgid "Record absence"
-msgstr "Зарегистрировать отсутствие"
-
-msgid "Replacement options"
-msgstr "Варианты замены"
-
-msgid "No absences recorded."
-msgstr "Отсутствий пока нет."
-
-msgid "Eligible unassigned employees:"
-msgstr "Подходящие неназначенные сотрудники:"
-
-msgid "No direct replacement is currently eligible."
-msgstr "Сейчас нет подходящей прямой замены."
-
-msgid "This absence affects no planned shifts."
-msgstr "Это отсутствие не затрагивает запланированные смены."
-
-msgid "Back to absences"
-msgstr "Назад к отсутствиям"
-
-msgid "Roster solver preview"
-msgstr "Предварительный результат планировщика"
-
-msgid "minimum places covered"
-msgstr "минимальных мест покрыто"
-
-msgid "total assignments"
-msgstr "всего назначений"
-
-msgid "shift-count spread"
-msgstr "разброс количества смен"
-
-msgid "wish score"
-msgstr "оценка предпочтений"
-
-msgid "Proposed month"
-msgstr "Предлагаемый месяц"
-
-msgid "Workload change"
-msgstr "Изменение нагрузки"
-
-msgid "Before"
-msgstr "До"
-
-msgid "After"
-msgstr "После"
-
-msgid "shifts"
-msgstr "смен"
-
-msgid "days"
-msgstr "дней"
-
-msgid "Minimum coverage gaps"
-msgstr "Нехватка минимального покрытия"
-
-msgid "Date"
-msgstr "Дата"
-
-msgid "Shift"
-msgstr "Смена"
-
-msgid "Reason"
-msgstr "Причина"
-
-msgid "Apply proposal"
-msgstr "Применить предложение"
-
-msgid "Back to roster"
-msgstr "Назад к расписанию"
-
-msgid "This proposal has already been applied."
-msgstr "Это предложение уже применено."
-
-msgid "Draft"
-msgstr "Черновик"
-
-msgid "Published"
-msgstr "Опубликовано"
-
-msgid "Superseded"
-msgstr "Заменено"
-
-msgid "Preview"
-msgstr "Предпросмотр"
-
-msgid "Applied"
-msgstr "Применено"
-
-msgid "Invalid"
-msgstr "Недействительно"
+msgid "Unwanted dates are avoided where possible. A desired day off is a stronger preference; an approved absence is the only hard block."
+msgstr "По возможности избегайте нежелательных дат. Желаемый выходной - это более сильное предпочтение; утвержденное отсутствие - единственный жесткий блок."
 
 msgid "Wanted"
-msgstr "Желательно"
+msgstr "Разыскивается"
 
-msgid "Unwanted"
-msgstr "Нежелательно"
-
-msgid "No date preference"
-msgstr "Без предпочтения даты"
-
-msgid "Pending"
-msgstr "Ожидает"
-
-msgid "Approved"
-msgstr "Одобрено"
-
-msgid "Acknowledged"
-msgstr "Подтверждено"
-
-msgid "Resolved"
-msgstr "Решено"
-
-msgid "Accepted"
-msgstr "Принято"
-
-msgid "Needs review"
-msgstr "Требуется проверка"
-
-msgid "Severity"
-msgstr "Серьёзность"
-
-msgid "Info"
-msgstr "Информация"
+msgid "Wanted favors a date; unwanted means avoid it if possible. Neither blocks assignment."
+msgstr "Разыскиваемый предпочитает свидание; нежелательное означает избегать его, если это возможно. Ни то, ни другое не блокирует назначение."
 
 msgid "Warning"
 msgstr "Предупреждение"
 
-msgid "Critical"
-msgstr "Критично"
+msgid "Wed"
+msgstr "Ср"
 
-msgid "Dismissed"
-msgstr "Отклонено"
+msgid "Wednesday"
+msgstr "Среда"
 
-msgid "Start time"
-msgstr "Время начала"
-
-msgid "End time"
-msgstr "Время окончания"
-
-msgid "Break minutes"
-msgstr "Минуты перерыва"
+msgid "Weekday numbers: Monday is 0, Sunday is 6."
+msgstr "Цифры будних дней: понедельник - 0, воскресенье - 6."
 
 msgid "Wish priority"
-msgstr "Приоритет предпочтения"
+msgstr "Приоритет Wish"
 
-msgid "Role"
-msgstr "Роль"
+msgid "Wishes"
+msgstr "Пожелания"
 
-msgid "Allowed locations"
-msgstr "Разрешённые локации"
+msgid "Workload change"
+msgstr "Изменение рабочей нагрузки"
 
-msgid "Planning starts on"
-msgstr "Начало планирования"
+msgid "approved absence"
+msgstr "утвержденное отсутствие"
 
-msgid "First day of the month"
-msgstr "Первый день месяца"
+msgid "archived"
+msgstr "архивный"
 
-msgid "Minimum coverage required for this shift."
-msgstr "Минимальное покрытие, необходимое для этой смены."
+msgid "assigned"
+msgstr "назначено"
 
-msgid "Maximum employees permitted on this shift."
-msgstr "Максимальное число сотрудников, разрешённое на этой смене."
+msgid "days"
+msgstr "дней"
 
-msgid "Choose a date within this roster month."
-msgstr "Выберите дату в пределах месяца этого расписания."
+msgid "gap"
+msgstr "пропуск"
 
-msgid "Draft roster created. Add shift templates, then generate assignments."
-msgstr "Черновик расписания создан. Добавьте шаблоны смен, затем создайте назначения."
+msgid "marked unavailable"
+msgstr "помечен как недоступный"
 
-msgid "Roster published."
-msgstr "Расписание опубликовано."
+msgid "minimum places covered"
+msgstr "минимальное количество охваченных мест"
 
-msgid "Shift assignment saved."
-msgstr "Назначение на смену сохранено."
+msgid "not eligible for this location"
+msgstr "не подходит для этого местоположения"
 
-msgid "Shift assignment removed."
-msgstr "Назначение на смену удалено."
+msgid "overlapping shift"
+msgstr "перекрывающийся сдвиг"
 
-msgid "Availability record saved."
-msgstr "Запись о доступности сохранена."
+msgid "priority"
+msgstr "приоритет "
 
-msgid "Availability record removed."
-msgstr "Запись о доступности удалена."
+msgid "shift-count spread"
+msgstr "спред shift-count"
 
-msgid "Absence saved."
-msgstr "Отсутствие сохранено."
+msgid "shifts"
+msgstr "смен"
 
-msgid "Roster wish saved."
-msgstr "Предпочтение расписания сохранено."
+msgid "total assignments"
+msgstr "Все задания"
 
-msgid "Only draft rosters can be generated."
-msgstr "Создавать можно только черновики расписаний."
+msgid "wish score"
+msgstr "оценка пожеланий"
 
-msgid "No active, eligible employee is available."
-msgstr "Нет доступного активного подходящего сотрудника."
-
-msgid "This proposal is no longer available to apply."
-msgstr "Это предложение больше нельзя применить."
-
-msgid "The roster inputs changed after this preview. Generate a new preview."
-msgstr "Данные расписания изменились после этого просмотра. Создайте новый просмотр."
-
-msgid "No report received within the configured interval."
-msgstr "Отчёт не получен в течение настроенного интервала."
-
-msgid "The cumulative result has not increased."
-msgstr "Накопительный результат не увеличился."
