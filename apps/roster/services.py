@@ -6,17 +6,18 @@ from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 from django.conf import settings
 from django.db import models, transaction
+from django.utils.translation import gettext as _
 from apps.people.models import Employee
 from .models import Absence, Availability, RosterGenerationProposalAssignment, RosterGenerationRun, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
 
 def eligible_for_shift(employee, location, starts_at, ends_at, roster=None, assignment_sources=None):
-    if not employee.active or not employee.allowed_locations.filter(pk=location.pk).exists(): return False, "not eligible for this location"
-    if Absence.objects.filter(employee=employee, status=Absence.APPROVED, starts_at__lt=ends_at, ends_at__gt=starts_at).exists(): return False, "approved absence"
-    if Availability.objects.filter(employee=employee, available=False, starts_at__lt=ends_at, ends_at__gt=starts_at).exists(): return False, "marked unavailable"
+    if not employee.active or not employee.allowed_locations.filter(pk=location.pk).exists(): return False, _("not eligible for this location")
+    if Absence.objects.filter(employee=employee, status=Absence.APPROVED, starts_at__lt=ends_at, ends_at__gt=starts_at).exists(): return False, _("approved absence")
+    if Availability.objects.filter(employee=employee, available=False, starts_at__lt=ends_at, ends_at__gt=starts_at).exists(): return False, _("marked unavailable")
     assignments = ShiftAssignment.objects.filter(employee=employee, starts_at__lt=ends_at, ends_at__gt=starts_at)
     if roster: assignments = assignments.filter(roster_version=roster)
     if assignment_sources is not None: assignments = assignments.filter(source__in=assignment_sources)
-    if assignments.exists(): return False, "overlapping shift"
+    if assignments.exists(): return False, _("overlapping shift")
     return True, ""
 
 def shift_datetimes(day, template):
@@ -28,7 +29,7 @@ def shift_datetimes(day, template):
 
 def generate_roster(roster):
     """Transparent greedy generator; returns generated assignments and explicit gaps."""
-    if roster.status != RosterVersion.DRAFT: raise ValueError("Only draft rosters can be generated.")
+    if roster.status != RosterVersion.DRAFT: raise ValueError(_("Only draft rosters can be generated."))
     roster.assignments.filter(source="generated").delete()
     templates = ShiftTemplate.objects.select_related("location").all()
     day = roster.month
@@ -77,7 +78,7 @@ def generate_roster(roster):
                         ShiftAssignment.objects.create(roster_version=roster, employee=employee, location=template.location, starts_at=starts_at, ends_at=ends_at, source="generated")
                         created += 1
                     else:
-                        gaps.append({"date": day, "template": template, "reason": "No active, eligible employee is available."})
+                        gaps.append({"date": day, "template": template, "reason": _("No active, eligible employee is available.")})
             day += timedelta(days=1)
     return created, gaps
 
@@ -383,7 +384,7 @@ class RosterOptimizationService:
         def optimize(expression, maximize=True):
             model.Maximize(expression) if maximize else model.Minimize(expression)
             status = solver.Solve(model)
-            if status != cp_model.OPTIMAL: raise ValueError("Roster optimizer could not prove an optimal result within 20 seconds. Reduce the planning scope and retry.")
+            if status != cp_model.OPTIMAL: raise ValueError(_("Roster optimizer could not prove an optimal result within 20 seconds. Reduce the planning scope and retry."))
             return int(solver.Value(expression))
         coverage_value = optimize(sum(coverage))
         model.Add(sum(coverage) == coverage_value)
@@ -417,7 +418,7 @@ class RosterOptimizationService:
                     proposal_rows.append(RosterGenerationProposalAssignment(generation_run=proposal, employee=employee, location=instance["template"].location, starts_at=instance["starts_at"], ends_at=instance["ends_at"], wish_score=score))
                     assigned_count += 1; workload[employee.name] = workload.get(employee.name, 0) + 1
             if assigned_count < instance["template"].min_headcount:
-                diagnostics.append({"date": instance["day"].isoformat(), "shift": instance["template"].name, "location": instance["template"].location.name, "minimum": instance["template"].min_headcount, "assigned": assigned_count, "eligible_candidates": len(candidates.get(index, [])), "reason": "Not enough eligible employees after absences, unavailability, overlaps, and locked assignments."})
+                diagnostics.append({"date": instance["day"].isoformat(), "shift": instance["template"].name, "location": instance["template"].location.name, "minimum": instance["template"].min_headcount, "assigned": assigned_count, "eligible_candidates": len(candidates.get(index, [])), "reason": _("Not enough eligible employees after absences, unavailability, overlaps, and locked assignments.")})
         RosterGenerationProposalAssignment.objects.bulk_create(proposal_rows)
         weekday_preferences = {}
         for assignment in [*manual, *proposal_rows]:
@@ -439,9 +440,9 @@ class RosterOptimizationService:
     @staticmethod
     def apply_preview(proposal):
         from django.utils import timezone
-        if proposal.status != RosterGenerationRun.PREVIEW: raise ValueError("This proposal is no longer available to apply.")
+        if proposal.status != RosterGenerationRun.PREVIEW: raise ValueError(_("This proposal is no longer available to apply."))
         planning_starts_on = proposal.planning_starts_on or proposal.roster_version.month
-        if proposal.input_fingerprint != roster_input_fingerprint(proposal.roster_version, planning_starts_on): raise ValueError("The roster inputs changed after this preview. Generate a new preview.")
+        if proposal.input_fingerprint != roster_input_fingerprint(proposal.roster_version, planning_starts_on): raise ValueError(_("The roster inputs changed after this preview. Generate a new preview."))
         with transaction.atomic():
             proposal.roster_version.assignments.filter(source__in=["generated", "solver_generated"], starts_at__date__gte=planning_starts_on).delete()
             ShiftAssignment.objects.bulk_create([ShiftAssignment(roster_version=proposal.roster_version, employee=row.employee, location=row.location, starts_at=row.starts_at, ends_at=row.ends_at, source="solver_generated") for row in proposal.proposed_assignments.select_related("employee", "location")])

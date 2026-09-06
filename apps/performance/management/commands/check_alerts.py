@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from apps.performance.models import AlertRule, ManagerAlert, PerformanceReport
 from apps.roster.models import RosterVersion, ShiftAssignment
 
@@ -11,8 +12,8 @@ class Command(BaseCommand):
             latest = PerformanceReport.objects.filter(assignment=assignment, status=PerformanceReport.ACCEPTED).first()
             for rule in AlertRule.objects.filter(enabled=True):
                 issue = None
-                if rule.rule_type == AlertRule.MISSING and (not latest or (now - latest.reported_at).total_seconds() / 60 > rule.grace_minutes): issue = "No report received within the configured interval."
-                if rule.rule_type == AlertRule.NO_INCREASE and latest and PerformanceReport.objects.filter(assignment=assignment, status=PerformanceReport.ACCEPTED, employee_total=latest.employee_total).count() > 1: issue = "The cumulative result has not increased."
+                if rule.rule_type == AlertRule.MISSING and (not latest or (now - latest.reported_at).total_seconds() / 60 > rule.grace_minutes): issue = _("No report received within the configured interval.")
+                if rule.rule_type == AlertRule.NO_INCREASE and latest and PerformanceReport.objects.filter(assignment=assignment, status=PerformanceReport.ACCEPTED, employee_total=latest.employee_total).count() > 1: issue = _("The cumulative result has not increased.")
                 if issue:
                     alert, was_created = ManagerAlert.objects.get_or_create(rule=rule, assignment=assignment, employee=assignment.employee, status=ManagerAlert.OPEN, defaults={"severity": rule.severity, "explanation": issue, "report": latest})
                     created += int(was_created)

@@ -1,0 +1,491 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Manager's Suite"
+msgstr "Менеджерский кабинет"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Employees"
+msgstr "Сотрудники"
+
+msgid "Locations"
+msgstr "Локации"
+
+msgid "Roster"
+msgstr "Расписание"
+
+msgid "Availability"
+msgstr "Доступность"
+
+msgid "Wishes"
+msgstr "Предпочтения"
+
+msgid "Absences"
+msgstr "Отсутствия"
+
+msgid "Reports"
+msgstr "Отчёты"
+
+msgid "Alerts"
+msgstr "Оповещения"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Confirm"
+msgstr "Подтвердить"
+
+msgid "Edit"
+msgstr "Изменить"
+
+msgid "Remove"
+msgstr "Удалить"
+
+msgid "Name"
+msgstr "Название"
+
+msgid "Active"
+msgstr "Активен"
+
+msgid "Notes"
+msgstr "Примечания"
+
+msgid "Employee"
+msgstr "Сотрудник"
+
+msgid "Location"
+msgstr "Локация"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Period"
+msgstr "Период"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "Source"
+msgstr "Источник"
+
+msgid "Time"
+msgstr "Время"
+
+msgid "Today"
+msgstr "Сегодня"
+
+msgid "System"
+msgstr "Система"
+
+msgid "Open"
+msgstr "Открыто"
+
+msgid "Acknowledge"
+msgstr "Подтвердить получение"
+
+msgid "Resolve"
+msgstr "Закрыть"
+
+msgid "No alerts."
+msgstr "Нет оповещений."
+
+msgid "No open alerts."
+msgstr "Нет открытых оповещений."
+
+msgid "Open alerts"
+msgstr "Открытые оповещения"
+
+msgid "Staff scheduled now"
+msgstr "Сотрудники на смене сейчас"
+
+msgid "No staff scheduled right now."
+msgstr "Сейчас нет сотрудников на смене."
+
+msgid "Latest accepted reports"
+msgstr "Последние принятые отчёты"
+
+msgid "Result"
+msgstr "Результат"
+
+msgid "Reported"
+msgstr "Отправлено"
+
+msgid "No reports yet."
+msgstr "Отчётов пока нет."
+
+msgid "Employee total"
+msgstr "Итого сотрудника"
+
+msgid "Location total"
+msgstr "Итого локации"
+
+msgid "Manager sign in"
+msgstr "Вход менеджера"
+
+msgid "Sign in"
+msgstr "Войти"
+
+msgid "Add employee"
+msgstr "Добавить сотрудника"
+
+msgid "Search employees"
+msgstr "Поиск сотрудников"
+
+msgid "Priority"
+msgstr "Приоритет"
+
+msgid "archived"
+msgstr "в архиве"
+
+msgid "No employees yet."
+msgstr "Сотрудников пока нет."
+
+msgid "Add location"
+msgstr "Добавить локацию"
+
+msgid "Operating hours"
+msgstr "Часы работы"
+
+msgid "No locations yet."
+msgstr "Локаций пока нет."
+
+msgid "Rosters"
+msgstr "Расписания"
+
+msgid "Shift templates"
+msgstr "Шаблоны смен"
+
+msgid "Create monthly roster"
+msgstr "Создать месячное расписание"
+
+msgid "Month"
+msgstr "Месяц"
+
+msgid "Assignments"
+msgstr "Назначения"
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "No rosters yet. Create a draft to start planning."
+msgstr "Расписаний пока нет. Создайте черновик, чтобы начать планирование."
+
+msgid "Add shift template"
+msgstr "Добавить шаблон смены"
+
+msgid "Templates define the required shifts created for every day of a monthly roster."
+msgstr "Шаблоны определяют обязательные смены, создаваемые для каждого дня месячного расписания."
+
+msgid "Minimum staff"
+msgstr "Минимум сотрудников"
+
+msgid "Maximum staff"
+msgstr "Максимум сотрудников"
+
+msgid "No templates yet."
+msgstr "Шаблонов пока нет."
+
+msgid "Add custom shift"
+msgstr "Добавить произвольную смену"
+
+msgid "Publish"
+msgstr "Опубликовать"
+
+msgid "Return to draft"
+msgstr "Вернуть в черновик"
+
+msgid "Generate preview"
+msgstr "Создать предварительный просмотр"
+
+msgid "Custom shift"
+msgstr "Произвольная смена"
+
+msgid "assigned"
+msgstr "назначено"
+
+msgid "gap"
+msgstr "нехватка"
+
+msgid "Unassigned"
+msgstr "Не назначено"
+
+msgid "Add employee"
+msgstr "Добавить сотрудника"
+
+msgid "No shifts"
+msgstr "Нет смен"
+
+msgid "Publish roster"
+msgstr "Опубликовать расписание"
+
+msgid "This roster still has uncovered shifts:"
+msgstr "В этом расписании ещё есть непокрытые смены:"
+
+msgid "I accept these uncovered shifts."
+msgstr "Я принимаю эти непокрытые смены."
+
+msgid "Return roster to draft"
+msgstr "Вернуть расписание в черновик"
+
+msgid "Add shift assignment"
+msgstr "Добавить назначение на смену"
+
+msgid "A conflict needs a manager explanation before it can be saved."
+msgstr "Для сохранения конфликта требуется пояснение менеджера."
+
+msgid "Save shift"
+msgstr "Сохранить смену"
+
+msgid "Remove shift assignment"
+msgstr "Удалить назначение на смену"
+
+msgid "Add availability"
+msgstr "Добавить доступность"
+
+msgid "Available"
+msgstr "Доступен"
+
+msgid "Unavailable"
+msgstr "Недоступен"
+
+msgid "No availability records."
+msgstr "Нет записей о доступности."
+
+msgid "Remove availability record"
+msgstr "Удалить запись о доступности"
+
+msgid "Roster wishes"
+msgstr "Предпочтения расписания"
+
+msgid "Add wish"
+msgstr "Добавить предпочтение"
+
+msgid "Preferred weekdays"
+msgstr "Предпочтительные дни недели"
+
+msgid "Date preference"
+msgstr "Предпочтение даты"
+
+msgid "Day off"
+msgstr "Выходной"
+
+msgid "No wishes recorded."
+msgstr "Предпочтений пока нет."
+
+msgid "Record absence"
+msgstr "Зарегистрировать отсутствие"
+
+msgid "Replacement options"
+msgstr "Варианты замены"
+
+msgid "No absences recorded."
+msgstr "Отсутствий пока нет."
+
+msgid "Eligible unassigned employees:"
+msgstr "Подходящие неназначенные сотрудники:"
+
+msgid "No direct replacement is currently eligible."
+msgstr "Сейчас нет подходящей прямой замены."
+
+msgid "This absence affects no planned shifts."
+msgstr "Это отсутствие не затрагивает запланированные смены."
+
+msgid "Back to absences"
+msgstr "Назад к отсутствиям"
+
+msgid "Roster solver preview"
+msgstr "Предварительный результат планировщика"
+
+msgid "minimum places covered"
+msgstr "минимальных мест покрыто"
+
+msgid "total assignments"
+msgstr "всего назначений"
+
+msgid "shift-count spread"
+msgstr "разброс количества смен"
+
+msgid "wish score"
+msgstr "оценка предпочтений"
+
+msgid "Proposed month"
+msgstr "Предлагаемый месяц"
+
+msgid "Workload change"
+msgstr "Изменение нагрузки"
+
+msgid "Before"
+msgstr "До"
+
+msgid "After"
+msgstr "После"
+
+msgid "shifts"
+msgstr "смен"
+
+msgid "days"
+msgstr "дней"
+
+msgid "Minimum coverage gaps"
+msgstr "Нехватка минимального покрытия"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Shift"
+msgstr "Смена"
+
+msgid "Reason"
+msgstr "Причина"
+
+msgid "Apply proposal"
+msgstr "Применить предложение"
+
+msgid "Back to roster"
+msgstr "Назад к расписанию"
+
+msgid "This proposal has already been applied."
+msgstr "Это предложение уже применено."
+
+msgid "Draft"
+msgstr "Черновик"
+
+msgid "Published"
+msgstr "Опубликовано"
+
+msgid "Superseded"
+msgstr "Заменено"
+
+msgid "Preview"
+msgstr "Предпросмотр"
+
+msgid "Applied"
+msgstr "Применено"
+
+msgid "Invalid"
+msgstr "Недействительно"
+
+msgid "Wanted"
+msgstr "Желательно"
+
+msgid "Unwanted"
+msgstr "Нежелательно"
+
+msgid "No date preference"
+msgstr "Без предпочтения даты"
+
+msgid "Pending"
+msgstr "Ожидает"
+
+msgid "Approved"
+msgstr "Одобрено"
+
+msgid "Acknowledged"
+msgstr "Подтверждено"
+
+msgid "Resolved"
+msgstr "Решено"
+
+msgid "Accepted"
+msgstr "Принято"
+
+msgid "Needs review"
+msgstr "Требуется проверка"
+
+msgid "Severity"
+msgstr "Серьёзность"
+
+msgid "Info"
+msgstr "Информация"
+
+msgid "Warning"
+msgstr "Предупреждение"
+
+msgid "Critical"
+msgstr "Критично"
+
+msgid "Dismissed"
+msgstr "Отклонено"
+
+msgid "Start time"
+msgstr "Время начала"
+
+msgid "End time"
+msgstr "Время окончания"
+
+msgid "Break minutes"
+msgstr "Минуты перерыва"
+
+msgid "Wish priority"
+msgstr "Приоритет предпочтения"
+
+msgid "Role"
+msgstr "Роль"
+
+msgid "Allowed locations"
+msgstr "Разрешённые локации"
+
+msgid "Planning starts on"
+msgstr "Начало планирования"
+
+msgid "First day of the month"
+msgstr "Первый день месяца"
+
+msgid "Minimum coverage required for this shift."
+msgstr "Минимальное покрытие, необходимое для этой смены."
+
+msgid "Maximum employees permitted on this shift."
+msgstr "Максимальное число сотрудников, разрешённое на этой смене."
+
+msgid "Choose a date within this roster month."
+msgstr "Выберите дату в пределах месяца этого расписания."
+
+msgid "Draft roster created. Add shift templates, then generate assignments."
+msgstr "Черновик расписания создан. Добавьте шаблоны смен, затем создайте назначения."
+
+msgid "Roster published."
+msgstr "Расписание опубликовано."
+
+msgid "Shift assignment saved."
+msgstr "Назначение на смену сохранено."
+
+msgid "Shift assignment removed."
+msgstr "Назначение на смену удалено."
+
+msgid "Availability record saved."
+msgstr "Запись о доступности сохранена."
+
+msgid "Availability record removed."
+msgstr "Запись о доступности удалена."
+
+msgid "Absence saved."
+msgstr "Отсутствие сохранено."
+
+msgid "Roster wish saved."
+msgstr "Предпочтение расписания сохранено."
+
+msgid "Only draft rosters can be generated."
+msgstr "Создавать можно только черновики расписаний."
+
+msgid "No active, eligible employee is available."
+msgstr "Нет доступного активного подходящего сотрудника."
+
+msgid "This proposal is no longer available to apply."
+msgstr "Это предложение больше нельзя применить."
+
+msgid "The roster inputs changed after this preview. Generate a new preview."
+msgstr "Данные расписания изменились после этого просмотра. Создайте новый просмотр."
+
+msgid "No report received within the configured interval."
+msgstr "Отчёт не получен в течение настроенного интервала."
+
+msgid "The cumulative result has not increased."
+msgstr "Накопительный результат не увеличился."

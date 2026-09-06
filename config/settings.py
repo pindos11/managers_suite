@@ -7,7 +7,7 @@ DEBUG = os.getenv("DJANGO_DEBUG", "1") == "1"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 BUSINESS_TIME_ZONE = os.getenv("BUSINESS_TIME_ZONE", "Europe/Kyiv")
 LANGUAGE_CODE = os.getenv("DEFAULT_LANGUAGE", "en")
-LANGUAGES = [("en", "English"), ("uk", "Українська")]
+LANGUAGES = [("en", "English"), ("ru", "Русский")]
 # Django still stores timezone-aware timestamps in UTC in the database.  This
 # setting controls form and template display, which must match the manager's
 # configured business timezone (for example Europe/Kyiv).

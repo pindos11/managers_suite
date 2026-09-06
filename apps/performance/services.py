@@ -1,10 +1,11 @@
 from decimal import Decimal
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
 from .models import EmployeeTargetAllocation
 
 def validate_target_allocations(target):
     total = sum(target.allocations.values_list("allocated_target", flat=True))
-    if total != target.target_total: raise ValidationError(f"Allocations total {total}; location target is {target.target_total}.")
+    if total != target.target_total: raise ValidationError(_("Allocations total %(total)s; location target is %(target)s.") % {"total": total, "target": target.target_total})
     return total
 
 def performance_snapshot(report, allocation=None):

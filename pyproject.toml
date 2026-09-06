@@ -3,7 +3,7 @@ name = "managers-suite"
 version = "0.1.0"
 description = "Manager dashboard, roster, performance reporting and alerts"
 requires-python = ">=3.12"
-dependencies = ["Django>=5.0,<5.2", "ortools>=9.10,<10", "waitress>=3,<4"]
+dependencies = ["Django>=5.0,<5.2", "openpyxl>=3.1,<4", "ortools>=9.10,<10", "reportlab>=4.2,<5", "waitress>=3,<4"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "pytest-django>=4"]

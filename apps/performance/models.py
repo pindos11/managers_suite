@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from apps.people.models import Employee, Location
 from apps.roster.models import ShiftAssignment
 
@@ -18,23 +19,24 @@ class EmployeeTargetAllocation(models.Model):
 
 class PerformanceReport(models.Model):
     ACCEPTED, SUPERSEDED, REVIEW = "accepted", "superseded", "review"
+    STATUS = [(ACCEPTED, _("Accepted")), (SUPERSEDED, _("Superseded")), (REVIEW, _("Needs review"))]
     employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
     assignment = models.ForeignKey(ShiftAssignment, null=True, blank=True, on_delete=models.SET_NULL)
     reported_at = models.DateTimeField()
     employee_total = models.PositiveIntegerField()
     location_total = models.PositiveIntegerField()
-    status = models.CharField(max_length=12, default=ACCEPTED)
+    status = models.CharField(_("Status"), max_length=12, choices=STATUS, default=ACCEPTED)
     replaces = models.ForeignKey("self", null=True, blank=True, related_name="corrections", on_delete=models.SET_NULL)
     class Meta: ordering = ["-reported_at"]
 
 class AlertRule(models.Model):
     MISSING, PACE, NO_INCREASE = "missing", "pace", "no_increase"
-    rule_type = models.CharField(max_length=20, choices=[(MISSING,"Missing report"),(PACE,"Below pace"),(NO_INCREASE,"No increase")])
+    rule_type = models.CharField(_("Rule type"), max_length=20, choices=[(MISSING, _("Missing report")),(PACE, _("Below pace")),(NO_INCREASE, _("No increase"))])
     enabled = models.BooleanField(default=True)
     threshold = models.FloatField(default=0)
     grace_minutes = models.PositiveIntegerField(default=30)
-    severity = models.CharField(max_length=12, default="warning")
+    severity = models.CharField(_("Severity"), max_length=12, choices=[("info", _("Info")), ("warning", _("Warning")), ("critical", _("Critical"))], default="warning")
 
 class ManagerAlert(models.Model):
     OPEN, ACKNOWLEDGED, RESOLVED, DISMISSED = "open", "acknowledged", "resolved", "dismissed"
@@ -42,9 +44,9 @@ class ManagerAlert(models.Model):
     employee = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.SET_NULL)
     assignment = models.ForeignKey(ShiftAssignment, null=True, blank=True, on_delete=models.SET_NULL)
     report = models.ForeignKey(PerformanceReport, null=True, blank=True, on_delete=models.SET_NULL)
-    severity = models.CharField(max_length=12, default="warning")
-    status = models.CharField(max_length=16, default=OPEN)
-    explanation = models.TextField()
-    manager_note = models.TextField(blank=True)
+    severity = models.CharField(_("Severity"), max_length=12, choices=[("info", _("Info")), ("warning", _("Warning")), ("critical", _("Critical"))], default="warning")
+    status = models.CharField(_("Status"), max_length=16, choices=[(OPEN, _("Open")), (ACKNOWLEDGED, _("Acknowledged")), (RESOLVED, _("Resolved")), (DISMISSED, _("Dismissed"))], default=OPEN)
+    explanation = models.TextField(_("Explanation"))
+    manager_note = models.TextField(_("Manager note"), blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     resolved_at = models.DateTimeField(null=True, blank=True)

@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
 from .forms import EmployeeForm, LocationForm
 from .models import Employee, Location
 
@@ -14,7 +15,7 @@ def employee_edit(request, pk=None):
     if request.method == "POST" and form.is_valid():
         form.save()
         return redirect("employees")
-    return render(request, "form.html", {"form": form, "title": "Employee"})
+    return render(request, "form.html", {"form": form, "title": _("Employee")})
 
 @login_required
 def locations(request):
@@ -26,4 +27,4 @@ def location_edit(request, pk=None):
     if request.method == "POST" and form.is_valid():
         form.save()
         return redirect("locations")
-    return render(request, "form.html", {"form": form, "title": "Location"})
+    return render(request, "form.html", {"form": form, "title": _("Location")})
