@@ -278,6 +278,7 @@ def roster_input_fingerprint(roster, planning_starts_on=None):
         "absences": list(Absence.objects.filter(status=Absence.APPROVED).order_by("pk").values("employee_id", "starts_at", "ends_at")),
         "availability": list(Availability.objects.filter(available=False).order_by("pk").values("employee_id", "starts_at", "ends_at")),
         "wishes": list(RosterWish.objects.order_by("pk").values("employee_id", "starts_on", "ends_on", "preferred_location_id", "preferred_weekdays", "date_preference", "desired_day_off")),
+        "employee_targets": list(roster.employee_targets.order_by("employee_id").values("employee_id", "target_shifts")),
     }
     return hashlib.sha256(json.dumps(payload, default=str, sort_keys=True).encode()).hexdigest()
 
@@ -291,6 +292,7 @@ class RosterOptimizationService:
         self.templates = list(ShiftTemplate.objects.select_related("location").all())
         self.employees = list(Employee.objects.filter(active=True).prefetch_related("allowed_locations"))
         self.wishes = {}
+        self.targets = dict(roster.employee_targets.values_list("employee_id", "target_shifts"))
         month_end = (roster.month.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
         for wish in RosterWish.objects.filter(starts_on__lte=month_end, ends_on__gte=roster.month):
             self.wishes.setdefault(wish.employee_id, []).append(wish)
@@ -379,6 +381,14 @@ class RosterOptimizationService:
         span = model.NewIntVar(0, len(instances), "workload_span")
         if loads: model.AddMaxEquality(span, loads); minimum_load = model.NewIntVar(0, len(instances), "minimum_load"); model.AddMinEquality(minimum_load, loads)
         else: minimum_load = 0
+        target_fulfillment = []
+        for employee, load in zip(eligible_employees, loads):
+            if employee.pk not in self.targets:
+                continue
+            target = self.targets[employee.pk]
+            fulfilled = model.NewIntVar(0, target, f"target_fulfilled_{employee.pk}")
+            model.AddMinEquality(fulfilled, [load, target])
+            target_fulfillment.append(fulfilled)
         wish_total = sum(_wish_score(employee, instances[index]["template"].location, instances[index]["day"], self.wishes) * variable for (employee_id, index), variable in variables.items() for employee in self.employees if employee.pk == employee_id)
         solver = cp_model.CpSolver(); solver.parameters.max_time_in_seconds = self.MAX_SECONDS; solver.parameters.num_search_workers = 8
         def optimize(expression, maximize=True):
@@ -388,6 +398,10 @@ class RosterOptimizationService:
             return int(solver.Value(expression))
         coverage_value = optimize(sum(coverage))
         model.Add(sum(coverage) == coverage_value)
+        target_value = 0
+        if target_fulfillment:
+            target_value = optimize(sum(target_fulfillment))
+            model.Add(sum(target_fulfillment) == target_value)
         assignments_value = optimize(total_assignments)
         model.Add(total_assignments == assignments_value)
         retained_value = 0
@@ -407,7 +421,7 @@ class RosterOptimizationService:
             model.Add(imbalance == imbalance_value)
         else: imbalance_value = 0
         wish_value = optimize(wish_total)
-        proposal = RosterGenerationRun.objects.create(roster_version=self.roster, planning_starts_on=self.planning_starts_on, input_fingerprint=roster_input_fingerprint(self.roster, self.planning_starts_on), summary={"minimum_coverage": coverage_value, "assignments": assignments_value, "retained_assignments": retained_value, "workload_span": imbalance_value, "wish_score": wish_value})
+        proposal = RosterGenerationRun.objects.create(roster_version=self.roster, planning_starts_on=self.planning_starts_on, input_fingerprint=roster_input_fingerprint(self.roster, self.planning_starts_on), summary={"minimum_coverage": coverage_value, "target_fulfillment": target_value, "assignments": assignments_value, "retained_assignments": retained_value, "workload_span": imbalance_value, "wish_score": wish_value})
         proposal_rows, diagnostics, workload = [], [], {}
         for index, instance in enumerate(instances):
             assigned_count = len(locked_by_instance[index])

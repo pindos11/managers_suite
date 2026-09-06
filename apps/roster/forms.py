@@ -1,6 +1,7 @@
 from django import forms
 from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
+from apps.people.models import Employee, Location
 from .models import Absence, Availability, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
 
 class MonthInput(forms.DateInput):
@@ -37,17 +38,29 @@ class ShiftTemplateForm(forms.ModelForm):
         fields = ["name", "location", "start_time", "end_time", "break_minutes", "min_headcount", "max_headcount"]
         widgets = {"start_time": forms.TimeInput(attrs={"type": "time"}), "end_time": forms.TimeInput(attrs={"type": "time"})}
 
-class ShiftAssignmentForm(forms.ModelForm):
+class ShiftAssignmentForm(forms.Form):
+    employee = forms.ModelMultipleChoiceField(
+        queryset=Employee.objects.all(),
+        label=_("Employees"),
+        widget=forms.SelectMultiple(attrs={"size": 8}),
+        help_text=_("Hold Ctrl (or Command) to select more than one employee."),
+    )
+    location = forms.ModelChoiceField(queryset=Location.objects.all())
+    starts_at = forms.DateTimeField(
+        input_formats=["%Y-%m-%dT%H:%M"],
+        widget=forms.DateTimeInput(format="%Y-%m-%dT%H:%M", attrs={"type": "datetime-local"}),
+    )
+    ends_at = forms.DateTimeField(
+        input_formats=["%Y-%m-%dT%H:%M"],
+        widget=forms.DateTimeInput(format="%Y-%m-%dT%H:%M", attrs={"type": "datetime-local"}),
+    )
+    override_reason = forms.CharField(required=False, widget=forms.Textarea)
+
     def __init__(self, *args, inherited_shift=False, **kwargs):
         super().__init__(*args, **kwargs)
         if inherited_shift:
             for name in ("location", "starts_at", "ends_at"):
                 self.fields[name].widget = forms.HiddenInput()
-
-    class Meta:
-        model = ShiftAssignment
-        fields = ["employee", "location", "starts_at", "ends_at", "override_reason"]
-        widgets = {"starts_at": forms.DateTimeInput(format="%Y-%m-%dT%H:%M", attrs={"type": "datetime-local"}), "ends_at": forms.DateTimeInput(format="%Y-%m-%dT%H:%M", attrs={"type": "datetime-local"})}
 
 class AvailabilityForm(forms.ModelForm):
     class Meta:
@@ -100,3 +113,15 @@ class GenerationRequestForm(forms.Form):
         month_end = (self.roster.month.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
         if not self.roster.month <= starts_on <= month_end: raise forms.ValidationError(_("Choose a date within this roster month."))
         return starts_on
+
+class MonthlyShiftTargetForm(forms.Form):
+    def __init__(self, roster, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        targets = {item.employee_id: item.target_shifts for item in roster.employee_targets.all()}
+        for employee in Employee.objects.filter(active=True).order_by("name"):
+            self.fields[f"employee_{employee.pk}"] = forms.IntegerField(
+                label=employee.name,
+                min_value=0,
+                required=False,
+                initial=targets.get(employee.pk),
+            )

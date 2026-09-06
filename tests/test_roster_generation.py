@@ -55,3 +55,20 @@ def test_same_employee_cannot_be_added_twice_to_same_shift(client):
     response = client.post(f"/roster/{roster.pk}/assignments/new/", {"employee": employee.pk, "location": location.pk, "starts_at": starts, "ends_at": ends, "override_reason": "needed"})
     assert response.status_code == 200
     assert roster.assignments.count() == 1
+
+@pytest.mark.django_db
+def test_manual_assignment_can_add_multiple_employees(client):
+    from django.contrib.auth.models import User
+    location = Location.objects.create(name="Main")
+    first = Employee.objects.create(name="First")
+    second = Employee.objects.create(name="Second")
+    EmployeeLocationEligibility.objects.create(employee=first, location=location)
+    EmployeeLocationEligibility.objects.create(employee=second, location=location)
+    roster = RosterVersion.objects.create(month=date(2026, 2, 1))
+    user = User.objects.create_user("manager", password="test")
+    client.force_login(user)
+
+    response = client.post(f"/roster/{roster.pk}/assignments/new/", {"employee": [first.pk, second.pk], "location": location.pk, "starts_at": "2026-02-10T09:00", "ends_at": "2026-02-10T17:00"})
+
+    assert response.status_code == 302
+    assert set(roster.assignments.values_list("employee_id", flat=True)) == {first.pk, second.pk}

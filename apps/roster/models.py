@@ -26,6 +26,13 @@ class RosterVersion(models.Model):
     class Meta: ordering = ["-month", "-created_at"]
     def __str__(self): return f"{self.month:%B %Y} ({self.status})"
 
+class RosterEmployeeTarget(models.Model):
+    roster_version = models.ForeignKey(RosterVersion, related_name="employee_targets", on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    target_shifts = models.PositiveIntegerField(_("Target shifts"))
+    class Meta:
+        unique_together = ["roster_version", "employee"]
+
 class ShiftAssignment(models.Model):
     roster_version = models.ForeignKey(RosterVersion, related_name="assignments", on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee, on_delete=models.PROTECT)

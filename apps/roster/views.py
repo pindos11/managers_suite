@@ -4,8 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from .forms import AbsenceForm, AvailabilityForm, GenerationRequestForm, RosterCreateForm, RosterWishForm, ShiftAssignmentForm, ShiftTemplateForm
-from .models import Absence, Availability, RosterGenerationRun, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
+from .forms import AbsenceForm, AvailabilityForm, GenerationRequestForm, MonthlyShiftTargetForm, RosterCreateForm, RosterWishForm, ShiftAssignmentForm, ShiftTemplateForm
+from .models import Absence, Availability, RosterEmployeeTarget, RosterGenerationRun, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
 from .services import RosterOptimizationService, absence_replacements, coverage_for_roster, eligible_for_shift, generate_roster, proposal_delta, proposal_workload_delta, roster_calendar, shift_datetimes
 from .exports import excel_export, pdf_export
 
@@ -24,7 +24,23 @@ def roster_create(request):
 @login_required
 def roster_detail(request, pk):
     roster = get_object_or_404(RosterVersion, pk=pk)
-    return render(request, "roster/detail.html", {"roster": roster, "calendar_weeks": roster_calendar(roster), "generation_form": GenerationRequestForm(roster)})
+    return render(request, "roster/detail.html", {"roster": roster, "calendar_weeks": roster_calendar(roster), "generation_form": GenerationRequestForm(roster), "target_form": MonthlyShiftTargetForm(roster)})
+
+@login_required
+def roster_targets(request, pk):
+    roster = get_object_or_404(RosterVersion, pk=pk, status=RosterVersion.DRAFT)
+    form = MonthlyShiftTargetForm(roster, request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        target_ids = set()
+        for name, target in form.cleaned_data.items():
+            employee_id = int(name.removeprefix("employee_"))
+            if target is None:
+                continue
+            target_ids.add(employee_id)
+            RosterEmployeeTarget.objects.update_or_create(roster_version=roster, employee_id=employee_id, defaults={"target_shifts": target})
+        roster.employee_targets.exclude(employee_id__in=target_ids).delete()
+        messages.success(request, _("Monthly shift targets saved."))
+    return redirect("roster_detail", pk=roster.pk)
 
 @login_required
 def roster_delete(request, pk):
@@ -102,14 +118,26 @@ def assignment_create(request, roster_pk):
         data.update({"location": str(template.location_id), "starts_at": starts_at.strftime("%Y-%m-%dT%H:%M"), "ends_at": ends_at.strftime("%Y-%m-%dT%H:%M")})
     form = ShiftAssignmentForm(data, initial=initial, inherited_shift=bool(template))
     if request.method == "POST" and form.is_valid():
-        assignment = form.save(commit=False); assignment.roster_version = roster; assignment.source = "manual"
-        duplicate = ShiftAssignment.objects.filter(roster_version=roster, employee=assignment.employee, starts_at=assignment.starts_at, ends_at=assignment.ends_at).exists()
-        valid, reason = eligible_for_shift(assignment.employee, assignment.location, assignment.starts_at, assignment.ends_at, roster)
-        if duplicate:
-            form.add_error("employee", _("This employee is already assigned to this shift. Remove the existing assignment instead of adding a duplicate."))
-        elif not valid and not assignment.override_reason: form.add_error("override_reason", _("Conflict: %(reason)s. Explain this override.") % {"reason": reason})
+        employees = form.cleaned_data["employee"]
+        location = form.cleaned_data["location"]
+        starts_at = form.cleaned_data["starts_at"]
+        ends_at = form.cleaned_data["ends_at"]
+        override_reason = form.cleaned_data["override_reason"]
+        duplicates = ShiftAssignment.objects.filter(roster_version=roster, employee__in=employees, starts_at=starts_at, ends_at=ends_at)
+        conflicts = [employee for employee in employees if not eligible_for_shift(employee, location, starts_at, ends_at, roster)[0]]
+        assigned_count = ShiftAssignment.objects.filter(roster_version=roster, location=location, starts_at=starts_at, ends_at=ends_at).count()
+        if template and assigned_count + len(employees) > template.max_headcount:
+            form.add_error("employee", _("Only %(count)s more employee(s) can be added to this shift.") % {"count": max(0, template.max_headcount - assigned_count)})
+        elif duplicates.exists():
+            form.add_error("employee", _("One or more selected employees are already assigned to this shift. Remove the existing assignment instead of adding a duplicate."))
+        elif conflicts and not override_reason:
+            form.add_error("override_reason", _("Conflict for %(employees)s. Explain this override.") % {"employees": ", ".join(str(employee) for employee in conflicts)})
         else:
-            assignment.save(); messages.success(request, _("Shift assignment saved.")); return redirect("roster_detail", pk=roster.pk)
+            ShiftAssignment.objects.bulk_create([
+                ShiftAssignment(roster_version=roster, employee=employee, location=location, starts_at=starts_at, ends_at=ends_at, override_reason=override_reason, source="manual")
+                for employee in employees
+            ])
+            messages.success(request, _("Shift assignments saved.")); return redirect("roster_detail", pk=roster.pk)
     return render(request, "roster/assignment_form.html", {"form": form, "roster": roster, "template": template, "starts_at": initial.get("starts_at"), "ends_at": initial.get("ends_at")})
 
 @login_required

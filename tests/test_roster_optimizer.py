@@ -1,8 +1,22 @@
 from datetime import date, time
 import pytest
 from apps.people.models import Employee, EmployeeLocationEligibility, Location
-from apps.roster.models import RosterGenerationProposalAssignment, RosterGenerationRun, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
+from apps.roster.models import RosterEmployeeTarget, RosterGenerationProposalAssignment, RosterGenerationRun, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
 from apps.roster.services import RosterOptimizationService, _wish_score, proposal_delta, proposal_workload_delta, roster_calendar
+
+@pytest.mark.django_db
+def test_optimizer_prioritizes_monthly_targets_before_optional_capacity():
+    location = Location.objects.create(name="Main")
+    targeted = Employee.objects.create(name="Targeted")
+    other = Employee.objects.create(name="Other")
+    for employee in [targeted, other]: EmployeeLocationEligibility.objects.create(employee=employee, location=location)
+    ShiftTemplate.objects.create(name="Day", location=location, start_time=time(9), end_time=time(17), min_headcount=1, max_headcount=1)
+    roster = RosterVersion.objects.create(month=date(2026, 2, 1))
+    RosterEmployeeTarget.objects.create(roster_version=roster, employee=targeted, target_shifts=28)
+
+    preview = RosterOptimizationService(roster).create_preview()
+
+    assert preview.proposed_assignments.filter(employee=targeted).count() == 28
 
 @pytest.mark.django_db
 def test_optimizer_previews_then_applies_maximum_feasible_capacity():
