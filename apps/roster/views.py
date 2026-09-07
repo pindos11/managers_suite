@@ -2,13 +2,15 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from datetime import timedelta
+from datetime import datetime, time, timedelta
+from zoneinfo import ZoneInfo
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from apps.people.models import Employee
-from .forms import AbsenceForm, AvailabilityForm, GenerationRequestForm, LegacyRosterImportForm, MonthlyShiftTargetForm, RosterCreateForm, RosterWishForm, ShiftAssignmentForm, ShiftTemplateForm
+from .forms import AbsenceForm, AvailabilityForm, AvailabilityUploadForm, GenerationRequestForm, LegacyRosterImportForm, MonthlyShiftTargetForm, RosterCreateForm, RosterWishForm, ShiftAssignmentForm, ShiftTemplateForm
 from .models import Absence, Availability, RosterEmployeeTarget, RosterGenerationRun, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
 from .services import RosterOptimizationService, absence_replacements, coverage_for_roster, eligible_for_shift, generate_roster, proposal_delta, proposal_workload_delta, roster_calendar, shift_datetimes
 from .exports import excel_export, pdf_export
@@ -277,6 +279,51 @@ def absence_proposal(request, pk):
 
 @login_required
 def availability(request): return render(request, "roster/availability.html", {"records": Availability.objects.select_related("employee").all()})
+
+@login_required
+def availability_upload(request):
+    form = AvailabilityUploadForm(request.POST or None, request.FILES or None)
+    if request.method == "POST" and form.is_valid():
+        data = form.import_data
+        month_start = data["month"]
+        next_month = (month_start.replace(day=28) + timedelta(days=4)).replace(day=1)
+        zone = ZoneInfo(settings.BUSINESS_TIME_ZONE)
+        starts_at = datetime.combine(month_start, time.min, tzinfo=zone)
+        ends_at = datetime.combine(next_month, time.min, tzinfo=zone)
+        existing = Availability.objects.filter(employee=data["employee"], starts_at__lt=ends_at, ends_at__gt=starts_at)
+        with transaction.atomic():
+            # Retain portions of a manually entered period outside the imported
+            # month, while replacing every availability day inside the month.
+            for record in existing:
+                original_end = record.ends_at
+                before_month = record.starts_at < starts_at
+                after_month = original_end > ends_at
+                if before_month and after_month:
+                    Availability.objects.create(employee=record.employee, starts_at=ends_at, ends_at=original_end, available=record.available, source=record.source, notes=record.notes)
+                    record.ends_at = starts_at
+                    record.save(update_fields=["ends_at"])
+                elif before_month:
+                    record.ends_at = starts_at
+                    record.save(update_fields=["ends_at"])
+                elif after_month:
+                    record.starts_at = ends_at
+                    record.save(update_fields=["starts_at"])
+                else:
+                    record.delete()
+            days = (next_month - month_start).days
+            Availability.objects.bulk_create([
+                Availability(
+                    employee=data["employee"],
+                    starts_at=datetime.combine(month_start + timedelta(days=offset), time.min, tzinfo=zone),
+                    ends_at=datetime.combine(month_start + timedelta(days=offset + 1), time.min, tzinfo=zone),
+                    available=(month_start + timedelta(days=offset)) in data["selected_dates"],
+                    source="dates_chooser_json",
+                )
+                for offset in range(days)
+            ])
+        messages.success(request, _("Imported availability for %(employee)s for %(month)s.") % {"employee": data["employee"], "month": month_start.strftime("%B %Y")})
+        return redirect("availability")
+    return render(request, "form.html", {"form": form, "title": _("Upload availability JSON")})
 
 @login_required
 def availability_edit(request, pk=None):

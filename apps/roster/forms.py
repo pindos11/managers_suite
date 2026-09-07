@@ -1,5 +1,7 @@
 from django import forms
+import json
 from datetime import date, timedelta
+from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 from django.utils.dates import MONTHS
 from apps.people.models import Employee, Location
@@ -84,6 +86,53 @@ class AvailabilityForm(forms.ModelForm):
         model = Availability
         fields = ["employee", "starts_at", "ends_at", "available", "source", "notes"]
         widgets = {"starts_at": forms.DateTimeInput(format="%Y-%m-%dT%H:%M", attrs={"type": "datetime-local"}), "ends_at": forms.DateTimeInput(format="%Y-%m-%dT%H:%M", attrs={"type": "datetime-local"})}
+
+
+class AvailabilityUploadForm(forms.Form):
+    file = forms.FileField(
+        label=_("Availability JSON file"),
+        help_text=_("Exported by dates_chooser. It must contain dates from exactly one month."),
+    )
+
+    def clean_file(self):
+        uploaded_file = self.cleaned_data["file"]
+        if Path(uploaded_file.name).suffix.lower() != ".json":
+            raise forms.ValidationError(_("Upload a JSON file."))
+        if uploaded_file.size > 1024 * 1024:
+            raise forms.ValidationError(_("The JSON file must be 1 MB or smaller."))
+        try:
+            payload = json.loads(uploaded_file.read().decode("utf-8-sig"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            raise forms.ValidationError(_("The uploaded file is not valid UTF-8 JSON."))
+        if not isinstance(payload, dict) or set(payload) != {"employee_name", "selected_dates"}:
+            raise forms.ValidationError(_("The JSON must contain only employee_name and selected_dates."))
+        employee_name = payload["employee_name"]
+        selected_dates = payload["selected_dates"]
+        if not isinstance(employee_name, str) or not employee_name:
+            raise forms.ValidationError(_("employee_name must be a non-empty string."))
+        if not isinstance(selected_dates, list) or not selected_dates:
+            raise forms.ValidationError(_("selected_dates must be a non-empty list so its month can be identified."))
+        dates = []
+        for value in selected_dates:
+            if not isinstance(value, str):
+                raise forms.ValidationError(_("Every selected date must use YYYY-MM-DD."))
+            try:
+                parsed = date.fromisoformat(value)
+            except ValueError:
+                raise forms.ValidationError(_("Every selected date must use YYYY-MM-DD."))
+            if parsed.isoformat() != value:
+                raise forms.ValidationError(_("Every selected date must use YYYY-MM-DD."))
+            dates.append(parsed)
+        if len(set(dates)) != len(dates):
+            raise forms.ValidationError(_("selected_dates must not contain duplicate dates."))
+        month = dates[0].replace(day=1)
+        if any(value.year != month.year or value.month != month.month for value in dates):
+            raise forms.ValidationError(_("The JSON may contain dates from exactly one month only."))
+        matches = Employee.objects.filter(name=employee_name)
+        if matches.count() != 1:
+            raise forms.ValidationError(_("employee_name must exactly match one employee in the system."))
+        self.import_data = {"employee": matches.get(), "month": month, "selected_dates": set(dates)}
+        return uploaded_file
 
 class AbsenceForm(forms.ModelForm):
     class Meta:
