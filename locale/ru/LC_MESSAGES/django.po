@@ -124,7 +124,7 @@ msgid "Assignments before this date stay fixed; the solver changes this date thr
 msgstr "Назначения до этой даты остаются фиксированными; генератор меняет с этой даты до конца месяца."
 
 msgid "Availability"
-msgstr "Наличие"
+msgstr "Доступность"
 
 msgid "Availability record removed."
 msgstr "Запись о доступности удалена."
@@ -448,7 +448,7 @@ msgid "No templates yet."
 msgstr "Нет шаблонов."
 
 msgid "No wishes recorded."
-msgstr "Желания не записаны."
+msgstr "Пожелания не записаны."
 
 msgid "Not enough eligible employees after absences, unavailability, overlaps, and locked assignments."
 msgstr "Недостаточно подходящих сотрудников после отсутствия, недоступности, дублирования и заблокированных назначений."

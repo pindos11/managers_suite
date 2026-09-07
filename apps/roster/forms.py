@@ -1,16 +1,32 @@
 from django import forms
-from datetime import timedelta
+from datetime import date, timedelta
 from django.utils.translation import gettext_lazy as _
+from django.utils.dates import MONTHS
 from apps.people.models import Employee, Location
 from .models import Absence, Availability, RosterVersion, RosterWish, ShiftAssignment, ShiftTemplate
 
-class MonthInput(forms.DateInput):
-    input_type = "month"
+class MonthSelectWidget(forms.MultiWidget):
+    """A browser-independent month/year selector for monthly rosters."""
 
     def __init__(self, attrs=None):
-        # Native month controls only accept an ISO year-month value, regardless
-        # of the active display locale.
-        super().__init__(attrs=attrs, format="%Y-%m")
+        current_year = date.today().year
+        month_choices = [("", _("Month"))] + [(number, MONTHS[number]) for number in range(1, 13)]
+        year_choices = [("", _("Year"))] + [(year, year) for year in range(current_year - 10, current_year + 11)]
+        super().__init__([forms.Select(choices=month_choices), forms.Select(choices=year_choices)], attrs)
+
+    def decompress(self, value):
+        if isinstance(value, str):
+            try:
+                value = date.fromisoformat(value)
+            except ValueError:
+                return [None, None]
+        if value:
+            return [value.month, value.year]
+        return [None, None]
+
+    def value_from_datadict(self, data, files, name):
+        month, year = super().value_from_datadict(data, files, name)
+        return f"{year}-{int(month):02d}-01" if month and year else None
 
 
 class ISODateInput(forms.DateInput):
@@ -23,10 +39,7 @@ class ISODateInput(forms.DateInput):
         super().__init__(attrs=attrs, format="%Y-%m-%d")
 
 class RosterCreateForm(forms.ModelForm):
-    # A native month input submits YYYY-MM rather than a full ISO date.
-    # Declare the field explicitly because ModelForm Meta does not apply
-    # input_formats to its generated DateField.
-    month = forms.DateField(input_formats=["%Y-%m", "%Y-%m-%d"], widget=MonthInput())
+    month = forms.DateField(input_formats=["%Y-%m-%d"], widget=MonthSelectWidget())
 
     class Meta:
         model = RosterVersion

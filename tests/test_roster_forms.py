@@ -21,10 +21,12 @@ def test_generation_start_date_stays_iso_for_native_date_input_in_russian():
 
 
 @pytest.mark.django_db
-def test_roster_creation_uses_and_accepts_native_month_input():
+def test_roster_creation_uses_month_and_year_selectors():
     form = RosterCreateForm()
-    assert 'type="month"' in form["month"].as_widget()
+    widget = form["month"].as_widget()
+    assert 'name="month_0"' in widget
+    assert 'name="month_1"' in widget
 
-    submitted = RosterCreateForm({"month": "2026-02"})
+    submitted = RosterCreateForm({"month_0": "2", "month_1": "2026"})
     assert submitted.is_valid()
     assert submitted.cleaned_data["month"] == date(2026, 2, 1)
